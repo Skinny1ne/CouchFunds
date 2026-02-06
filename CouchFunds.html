@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Couch Funds | Daily Wisdom</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;800&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-deep: #022c22;
+            --bg-glass: rgba(255, 255, 255, 0.03);
+            --border-glass: rgba(255, 255, 255, 0.1);
+            --accent-gold: #fbbf24;
+            --accent-green: #34d399;
+            --text-main: #ecfdf5;
+            --text-muted: #6ee7b7;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            font-family: 'Space Grotesk', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.4;
+            animation: float 20s infinite alternate;
+        }
+        .orb-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: var(--accent-green); }
+        .orb-2 { bottom: -10%; right: -10%; width: 40vw; height: 40vw; background: #065f46; animation-delay: -5s; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(30px, 50px); }
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            text-align: center;
+            z-index: 1;
+        }
+
+        .brand {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            color: var(--accent-gold);
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+
+        .tip-card {
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glass);
+            border-radius: 30px;
+            padding: 4rem 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tip-label {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--accent-green);
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .tip-content {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 600;
+            line-height: 1.3;
+            margin-bottom: 2rem;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-shuffle {
+            background: transparent;
+            border: 1px solid var(--accent-green);
+            color: var(--accent-green);
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Space Grotesk', sans-serif;
+            margin-top: 2rem;
+        }
+
+        .btn-shuffle:hover {
+            background: var(--accent-green);
+            color: var(--bg-deep);
+            box-shadow: 0 0 20px rgba(52, 211, 153, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .btn-shuffle:active {
+            transform: scale(0.95);
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .footer-note {
+            margin-top: 3rem;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.4);
+            line-height: 1.8;
+        }
+        
+        .fb-link {
+            color: var(--accent-gold);
+            text-decoration: none;
+            font-weight: 700;
+            border-bottom: 1px dotted var(--accent-gold);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <div class="container">
+        <div class="brand">Couch Funds</div>
+        
+        <div class="tip-card">
+            <span id="tip-label" class="tip-label">Tip of the Day</span>
+            
+            <div id="tip-text" class="tip-content">
+                Loading wisdom...
+            </div>
+        </div>
+
+        <button class="btn-shuffle" onclick="showRandomTip()">↻ Shuffle Wisdom</button>
+
+        <div class="footer-note">
+            Tips update daily based on your device time.<br>
+            Join the community on Facebook: <a href="https://web.facebook.com/profile.php?id=61587482075467" target="_blank" class="fb-link">CouchFunds</a>
+        </div>
+    </div>
+
+    <script>
+        const tips = [
+            "The best time to plant a money tree was 20 years ago. The second best time is today.",
+            "Compound interest is the eighth wonder of the world. He who understands it, earns it.",
+            "Wealth isn't about having a lot of money; it's about having a lot of options.",
+            "Don't save what is left after spending; spend what is left after saving.",
+            "A budget is telling your money where to go instead of wondering where it went.",
+            "Rich people stay rich by living like they're broke. Broke people stay broke by living like they're rich.",
+            "Inflation is the silent killer of wealth. Cash is not king; cash is a melting ice cube.",
+            "The stock market is a device for transferring money from the impatient to the patient.",
+            "You can't work 24/7, but your money can.",
+            "If you buy things you do not need, soon you will have to sell things you do need.",
+            "Passive income is the only true financial freedom.",
+            "Invest in yourself. Your knowledge is the engine of your wealth.",
+            "Automate your savings. Willpower is a limited resource.",
+            "The goal is not to look rich, the goal is to be rich.",
+            "Do not wait to buy real estate. Buy real estate and wait.",
+            "Your network is your net worth.",
+            "Frugality isn't about being cheap; it's about prioritizing what matters.",
+            "Never depend on a single income. Make an investment to create a second source.",
+            "Beware of little expenses. A small leak will sink a great ship.",
+            "Financial peace isn't the acquisition of stuff. It's learning to live on less than you make.",
+            "The 24-hour rule: Wait 24 hours before making any non-essential purchase over $50.",
+            "Pay yourself first.",
+            "Time in the market beats timing the market.",
+            "Assets put money in your pocket. Liabilities take money out of your pocket.",
+            "Don't trade your time for money forever. Trade your money for time.",
+            "Price is what you pay. Value is what you get.",
+            "Opportunity is missed by most people because it is dressed in overalls and looks like work.",
+            "A penny saved is a penny earned.",
+            "The rich invest in time, the poor invest in money.",
+            "Risk comes from not knowing what you are doing.",
+            "If you can't buy it twice, you can't afford it.",
+            "Money is a terrible master but an excellent servant.",
+            "Stop buying liabilities you think are assets.",
+            "Subscriptions are the termites of your financial house.",
+            "Track your net worth, not just your salary.",
+            "An investment in knowledge pays the best interest.",
+            "Don't put all your eggs in one basket.",
+            "Live below your means, but expand your means.",
+            "The fastest way to double your money is to fold it over and put it back in your pocket.",
+            "You are the CEO of your life. Start making executive decisions.",
+            "Don't let the fear of losing be greater than the excitement of winning.",
+            "Wealth is the ability to fully experience life.",
+            "Financial freedom is available to those who learn about it and work for it.",
+            "Every dollar you spend is a vote for the lifestyle you want.",
+            "The safe way to double your money is to turn it over once.",
+            "Debt is like a dark cloud that follows you everywhere.",
+            "Money grows on the tree of persistence.",
+            "Rich is not a number, it is a mindset.",
+            "Cut your losses short and let your winners run.",
+            "Diversification is protection against ignorance.",
+            "Be fearful when others are greedy and greedy when others are fearful.",
+            "Money rarely solves someone's money problems. Intelligence solves problems.",
+            "Don't keep up with the Joneses. The Joneses are broke.",
+            "Save for a rainy day, because it will rain.",
+            "Your salary is the bribe they give you to forget your dreams.",
+            "If you don't find a way to make money while you sleep, you will work until you die.",
+            "Wall Street is the only place that people ride to in a Rolls Royce to get advice from those who take the subway.",
+            "Wealth consists not in having great possessions, but in having few wants.",
+            "Money flows to those who know how to manage it.",
+            "The art is not in making money, but in keeping it.",
+            "Spending money to show people how much money you have is the fastest way to have less money.",
+            "Formal education will make you a living; self-education will make you a fortune.",
+            "It’s not how much money you make, but how much money you keep.",
+            "Focus on increasing your income, not just lowering your expenses.",
+            "Don't work for money; make it work for you.",
+            "Rule No. 1: Never lose money. Rule No. 2: Never forget Rule No. 1.",
+            "Opportunities don't happen. You create them.",
+            "Success is walking from failure to failure with no loss of enthusiasm.",
+            "The only limit to our realization of tomorrow will be our doubts of today.",
+            "Action is the foundational key to all success.",
+            "The difference between who you are and who you want to be is what you do.",
+            "Setting goals is the first step in turning the invisible into the visible.",
+            "Don't watch the clock; do what it does. Keep going.",
+            "Keep your eyes on the stars, and your feet on the ground.",
+            "You are never too old to set another goal or to dream a new dream.",
+            "The best revenge is massive success.",
+            "I find that the harder I work, the more luck I seem to have.",
+            "Success usually comes to those who are too busy to be looking for it.",
+            "Don't be afraid to give up the good to go for the great.",
+            "I would rather earn 1% off a 100 people's efforts than 100% of my own efforts.",
+            "The roadmap to wealth is paved with delayed gratification.",
+            "Index funds: Because looking for a needle in a haystack is hard, so just buy the haystack.",
+            "Your biggest asset is your ability to earn.",
+            "Emergency funds prevent emergencies from becoming disasters.",
+            "Lifestyle inflation is the enemy of early retirement.",
+            "Negotiate everything. Your salary, your bills, your rent.",
+            "Read one financial book a month. That's 12 upgrades to your brain a year.",
+            "Cash flow is the pulse of your financial health.",
+            "Don't borrow money to buy things that depreciate.",
+            "Consistency is the key to investing. Boring is good.",
+            "Check your bank account daily. Awareness cures bad habits.",
+            "Avoid bad debt (credit cards). Leverage good debt (mortgages).",
+            "A side hustle is your insurance policy against a layoff.",
+            "Generational wealth begins with a change in your daily habits.",
+            "The best investment you can make is in your own health.",
+            "Money buys convenience, not happiness. Know the difference.",
+            "Simplicity is the ultimate sophistication in finance.",
+            "Start today. Tomorrow is a thief.",
+            "You are richer than you think if you have zero debt."
+        ];
+
+        const tipTextElement = document.getElementById('tip-text');
+        const tipLabelElement = document.getElementById('tip-label');
+
+        function getTipOfTheDay() {
+            const now = new Date();
+            const start = new Date(now.getFullYear(), 0, 0);
+            const diff = now - start;
+            const oneDay = 1000 * 60 * 60 * 24;
+            const dayOfYear = Math.floor(diff / oneDay);
+            
+            const tipIndex = dayOfYear % tips.length;
+            
+            return tips[tipIndex];
+        }
+
+        function renderTip(text, label = "Tip of the Day") {
+            tipTextElement.classList.remove('fade-in');
+            
+            void tipTextElement.offsetWidth;
+            
+            tipTextElement.textContent = text;
+            tipLabelElement.textContent = label;
+            
+            tipTextElement.classList.add('fade-in');
+        }
+
+        function showRandomTip() {
+            const randomIndex = Math.floor(Math.random() * tips.length);
+            renderTip(tips[randomIndex], "Random Wisdom");
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTip(getTipOfTheDay());
+        });
+
+    </script>
+</body>
+</html>
