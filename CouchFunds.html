@@ -3,21 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Couch Funds | Daily Wisdom</title>
+    <title>Couch Funds | Tycoon Pro</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;800&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
+        /* --- CORE STYLES --- */
         :root {
             --bg-deep: #022c22;
             --bg-glass: rgba(255, 255, 255, 0.03);
+            --bg-glass-hover: rgba(255, 255, 255, 0.08);
             --border-glass: rgba(255, 255, 255, 0.1);
             --accent-gold: #fbbf24;
             --accent-green: #34d399;
+            --accent-red: #f87171;
             --text-main: #ecfdf5;
             --text-muted: #6ee7b7;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-user-select: none; }
 
         body {
             background-color: var(--bg-deep);
@@ -27,11 +30,12 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            overflow: hidden;
+            overflow-x: hidden;
             position: relative;
+            padding-bottom: 80px;
         }
 
+        /* --- BACKGROUND FX --- */
         .orb {
             position: absolute;
             border-radius: 50%;
@@ -53,6 +57,7 @@
             max-width: 800px;
             text-align: center;
             z-index: 1;
+            padding-top: 60px;
         }
 
         .brand {
@@ -66,36 +71,35 @@
             opacity: 0.8;
         }
 
+        /* --- WISDOM CARD --- */
         .tip-card {
             background: var(--bg-glass);
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--border-glass);
             border-radius: 30px;
-            padding: 4rem 2rem;
+            padding: 3rem 2rem;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            transition: transform 0.3s ease;
+            margin-bottom: 3rem;
             position: relative;
             overflow: hidden;
         }
 
         .tip-label {
             font-family: 'Outfit', sans-serif;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             text-transform: uppercase;
             letter-spacing: 3px;
             color: var(--accent-green);
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             display: block;
         }
 
         .tip-content {
             font-family: 'Outfit', sans-serif;
-            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
             font-weight: 600;
-            line-height: 1.3;
-            margin-bottom: 2rem;
-            min-height: 120px;
+            line-height: 1.4;
+            min-height: 80px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -105,49 +109,154 @@
             background: transparent;
             border: 1px solid var(--accent-green);
             color: var(--accent-green);
-            padding: 15px 40px;
+            padding: 10px 30px;
             border-radius: 50px;
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
             font-family: 'Space Grotesk', sans-serif;
-            margin-top: 2rem;
+            margin-top: 1.5rem;
+        }
+        .btn-shuffle:hover { background: var(--accent-green); color: var(--bg-deep); }
+
+        /* --- GAME UI --- */
+        .game-section {
+            width: 100%;
+            margin-top: 20px;
+            border-top: 1px solid var(--border-glass);
+            padding-top: 40px;
         }
 
-        .btn-shuffle:hover {
-            background: var(--accent-green);
-            color: var(--bg-deep);
-            box-shadow: 0 0 20px rgba(52, 211, 153, 0.4);
-            transform: translateY(-2px);
+        /* PROGRESS BAR */
+        .goal-container {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .goal-labels { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 5px; }
+        .progress-bar-bg {
+            width: 100%;
+            height: 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-green), var(--accent-gold));
+            width: 0%;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px var(--accent-green);
         }
 
-        .btn-shuffle:active {
-            transform: scale(0.95);
-        }
-
-        .fade-in {
-            animation: fadeIn 0.5s ease-in;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .footer-note {
-            margin-top: 3rem;
-            font-size: 0.9rem;
-            color: rgba(255,255,255,0.4);
-            line-height: 1.8;
+        .balance-display {
+            font-family: 'Outfit', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+            text-shadow: 0 0 30px rgba(52, 211, 153, 0.2);
+            line-height: 1;
         }
         
-        .fb-link {
-            color: var(--accent-gold);
-            text-decoration: none;
-            font-weight: 700;
-            border-bottom: 1px dotted var(--accent-gold);
+        .balance-subtitle { font-size: 1rem; color: var(--text-muted); margin-top: 5px; }
+
+        /* CLICKER */
+        .click-area {
+            position: relative;
+            margin: 40px auto;
+            width: 200px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
+
+        .couch-btn {
+            width: 160px;
+            height: 160px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 50%;
+            border: 8px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 40px rgba(16, 185, 129, 0.3), inset 0 5px 20px rgba(255,255,255,0.2);
+            cursor: pointer;
+            font-size: 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.1s;
+            position: relative;
+            z-index: 10;
+        }
+        .couch-btn:active { transform: scale(0.90); }
+        .couch-btn:hover { transform: scale(1.05); box-shadow: 0 0 60px rgba(16, 185, 129, 0.5); }
+
+        /* FLOATING TEXT */
+        .floating-text {
+            position: absolute;
+            color: var(--accent-gold);
+            font-weight: bold;
+            font-size: 1.5rem;
+            pointer-events: none;
+            animation: floatUp 0.8s ease-out forwards;
+            z-index: 20;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-80px) scale(1.2); opacity: 0; }
+        }
+
+        /* UPGRADE STORE */
+        .store-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            width: 100%;
+        }
+
+        .upgrade-card {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            padding: 15px;
+            border-radius: 15px;
+            text-align: left;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .upgrade-card.disabled { opacity: 0.5; cursor: default; filter: grayscale(1); pointer-events: none; }
+        .upgrade-card:not(.disabled):hover { background: var(--bg-glass-hover); transform: translateY(-3px); border-color: var(--accent-green); }
+        
+        .upgrade-name { font-weight: 700; display: block; margin-bottom: 5px; color: var(--text-main); }
+        .upgrade-cost { color: var(--accent-gold); font-size: 0.9rem; font-weight: 600; }
+        .upgrade-rate { color: var(--text-muted); font-size: 0.8rem; float: right; }
+        .upgrade-count { position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.3); padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; color: white; }
+
+        /* --- MODALS --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
+            z-index: 100; display: none; align-items: center; justify-content: center;
+        }
+        .modal-box {
+            background: var(--bg-deep); border: 2px solid var(--accent-gold);
+            padding: 40px; border-radius: 20px; max-width: 400px; text-align: center;
+            box-shadow: 0 0 50px rgba(251, 191, 36, 0.3);
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        
+        .modal-title { font-size: 2rem; color: var(--accent-gold); font-family: 'Outfit', sans-serif; margin-bottom: 10px; }
+        .modal-btn { margin-top: 20px; background: var(--accent-gold); color: var(--bg-deep); border: none; padding: 10px 30px; border-radius: 50px; font-weight: bold; cursor: pointer; }
+
+        .footer-note { margin-top: 5rem; font-size: 0.9rem; color: rgba(255,255,255,0.4); line-height: 1.8; }
+        .fb-link { color: var(--accent-gold); text-decoration: none; font-weight: 700; border-bottom: 1px dotted var(--accent-gold); }
+        .reset-btn { background: none; border: 1px solid #f87171; color: #f87171; padding: 5px 15px; border-radius: 20px; margin-top: 20px; cursor: pointer; font-size: 0.8rem; }
+        .reset-btn:hover { background: rgba(248, 113, 113, 0.1); }
+
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
     </style>
 </head>
 <body>
@@ -155,26 +264,90 @@
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
 
+    <div id="offline-modal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-title">Welcome Back!</div>
+            <p>Your assets were working while you were gone.</p>
+            <h2 id="offline-amount" style="margin: 20px 0; font-size: 2.5rem; color: var(--accent-green);">+$0.00</h2>
+            <button class="modal-btn" onclick="closeModal('offline-modal')">Collect</button>
+        </div>
+    </div>
+
+    <div id="win-modal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-title">🏆 YOU MADE IT!</div>
+            <p>You reached $1,000,000 without leaving the couch.</p>
+            <div style="font-size: 4rem; margin: 20px;">🛋️👑</div>
+            <p>You are a Couch Tycoon.</p>
+            <button class="modal-btn" onclick="closeModal('win-modal')">Keep Earning</button>
+            <button class="modal-btn" style="background: transparent; border: 1px solid var(--accent-gold); color: var(--accent-gold); margin-top: 10px;" onclick="prestigeReset()">Sell & Restart</button>
+        </div>
+    </div>
+
     <div class="container">
         <div class="brand">Couch Funds</div>
         
         <div class="tip-card">
             <span id="tip-label" class="tip-label">Tip of the Day</span>
-            
-            <div id="tip-text" class="tip-content">
-                Loading wisdom...
-            </div>
+            <div id="tip-text" class="tip-content">Loading wisdom...</div>
+            <button class="btn-shuffle" onclick="showRandomTip()">↻ Shuffle Wisdom</button>
         </div>
 
-        <button class="btn-shuffle" onclick="showRandomTip()">↻ Shuffle Wisdom</button>
+        <div class="game-section">
+            
+            <div class="goal-container">
+                <div class="goal-labels">
+                    <span>Progress</span>
+                    <span>Goal: $1,000,000</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div id="progress-fill" class="progress-bar-fill"></div>
+                </div>
+            </div>
+
+            <div class="game-header">
+                <div class="balance-subtitle">Net Worth</div>
+                <div id="balance" class="balance-display">$0.00</div>
+                <div id="income-display" class="balance-subtitle" style="color: var(--accent-green); margin-top: 5px;">+$0.00 / sec</div>
+            </div>
+
+            <div class="click-area">
+                <div class="couch-btn" id="click-btn">🛋️</div>
+            </div>
+
+            <div class="store-grid" id="store-grid">
+                </div>
+        </div>
 
         <div class="footer-note">
-            Tips update daily based on your device time.<br>
-            Join the community on Facebook: <a href="https://web.facebook.com/profile.php?id=61587482075467" target="_blank" class="fb-link">CouchFunds</a>
+            Tips update daily.<br>
+            Join the community on Facebook: <a href="https://web.facebook.com/profile.php?id=61587482075467" target="_blank" class="fb-link">CouchFunds</a><br>
+            <button class="reset-btn" onclick="hardReset()">⚠️ Wipe Save & Reset</button>
         </div>
     </div>
 
     <script>
+        // --- 1. CONFIGURATION & STATE ---
+        const GOAL_AMOUNT = 1000000;
+        let gameLoopInterval = null; // Store interval ID to kill it on reset
+
+        let gameState = {
+            balance: 0.00,
+            income: 0.00,
+            clickValue: 1.00,
+            hasWon: false,
+            lastSaveTime: Date.now(),
+            upgrades: [
+                { id: 0, name: "Loose Change", cost: 15, income: 0.5, count: 0, icon: "🪙" },
+                { id: 1, name: "Piggy Bank", cost: 100, income: 4, count: 0, icon: "🐷" },
+                { id: 2, name: "Lemonade Stand", cost: 1100, income: 12, count: 0, icon: "🍋" },
+                { id: 3, name: "Vending Machine", cost: 12000, income: 48, count: 0, icon: "🍫" },
+                { id: 4, name: "ATM", cost: 130000, income: 240, count: 0, icon: "🏧" },
+                { id: 5, name: "Bank Branch", cost: 1400000, income: 960, count: 0, icon: "🏦" }
+            ]
+        };
+
+        // --- 2. TIPS SYSTEM ---
         const tips = [
             "The best time to plant a money tree was 20 years ago. The second best time is today.",
             "Compound interest is the eighth wonder of the world. He who understands it, earns it.",
@@ -182,134 +355,233 @@
             "Don't save what is left after spending; spend what is left after saving.",
             "A budget is telling your money where to go instead of wondering where it went.",
             "Rich people stay rich by living like they're broke. Broke people stay broke by living like they're rich.",
-            "Inflation is the silent killer of wealth. Cash is not king; cash is a melting ice cube.",
-            "The stock market is a device for transferring money from the impatient to the patient.",
-            "You can't work 24/7, but your money can.",
-            "If you buy things you do not need, soon you will have to sell things you do need.",
             "Passive income is the only true financial freedom.",
             "Invest in yourself. Your knowledge is the engine of your wealth.",
             "Automate your savings. Willpower is a limited resource.",
             "The goal is not to look rich, the goal is to be rich.",
             "Do not wait to buy real estate. Buy real estate and wait.",
             "Your network is your net worth.",
-            "Frugality isn't about being cheap; it's about prioritizing what matters.",
-            "Never depend on a single income. Make an investment to create a second source.",
-            "Beware of little expenses. A small leak will sink a great ship.",
-            "Financial peace isn't the acquisition of stuff. It's learning to live on less than you make.",
-            "The 24-hour rule: Wait 24 hours before making any non-essential purchase over $50.",
-            "Pay yourself first.",
             "Time in the market beats timing the market.",
             "Assets put money in your pocket. Liabilities take money out of your pocket.",
             "Don't trade your time for money forever. Trade your money for time.",
             "Price is what you pay. Value is what you get.",
-            "Opportunity is missed by most people because it is dressed in overalls and looks like work.",
             "A penny saved is a penny earned.",
             "The rich invest in time, the poor invest in money.",
-            "Risk comes from not knowing what you are doing.",
             "If you can't buy it twice, you can't afford it.",
             "Money is a terrible master but an excellent servant.",
-            "Stop buying liabilities you think are assets.",
-            "Subscriptions are the termites of your financial house.",
             "Track your net worth, not just your salary.",
             "An investment in knowledge pays the best interest.",
-            "Don't put all your eggs in one basket.",
-            "Live below your means, but expand your means.",
-            "The fastest way to double your money is to fold it over and put it back in your pocket.",
-            "You are the CEO of your life. Start making executive decisions.",
-            "Don't let the fear of losing be greater than the excitement of winning.",
-            "Wealth is the ability to fully experience life.",
-            "Financial freedom is available to those who learn about it and work for it.",
-            "Every dollar you spend is a vote for the lifestyle you want.",
-            "The safe way to double your money is to turn it over once.",
-            "Debt is like a dark cloud that follows you everywhere.",
-            "Money grows on the tree of persistence.",
-            "Rich is not a number, it is a mindset.",
-            "Cut your losses short and let your winners run.",
-            "Diversification is protection against ignorance.",
-            "Be fearful when others are greedy and greedy when others are fearful.",
-            "Money rarely solves someone's money problems. Intelligence solves problems.",
-            "Don't keep up with the Joneses. The Joneses are broke.",
-            "Save for a rainy day, because it will rain.",
-            "Your salary is the bribe they give you to forget your dreams.",
-            "If you don't find a way to make money while you sleep, you will work until you die.",
-            "Wall Street is the only place that people ride to in a Rolls Royce to get advice from those who take the subway.",
-            "Wealth consists not in having great possessions, but in having few wants.",
-            "Money flows to those who know how to manage it.",
-            "The art is not in making money, but in keeping it.",
-            "Spending money to show people how much money you have is the fastest way to have less money.",
-            "Formal education will make you a living; self-education will make you a fortune.",
-            "It’s not how much money you make, but how much money you keep.",
-            "Focus on increasing your income, not just lowering your expenses.",
-            "Don't work for money; make it work for you.",
-            "Rule No. 1: Never lose money. Rule No. 2: Never forget Rule No. 1.",
-            "Opportunities don't happen. You create them.",
-            "Success is walking from failure to failure with no loss of enthusiasm.",
-            "The only limit to our realization of tomorrow will be our doubts of today.",
-            "Action is the foundational key to all success.",
-            "The difference between who you are and who you want to be is what you do.",
-            "Setting goals is the first step in turning the invisible into the visible.",
-            "Don't watch the clock; do what it does. Keep going.",
-            "Keep your eyes on the stars, and your feet on the ground.",
-            "You are never too old to set another goal or to dream a new dream.",
-            "The best revenge is massive success.",
-            "I find that the harder I work, the more luck I seem to have.",
-            "Success usually comes to those who are too busy to be looking for it.",
-            "Don't be afraid to give up the good to go for the great.",
-            "I would rather earn 1% off a 100 people's efforts than 100% of my own efforts.",
-            "The roadmap to wealth is paved with delayed gratification.",
-            "Index funds: Because looking for a needle in a haystack is hard, so just buy the haystack.",
-            "Your biggest asset is your ability to earn.",
-            "Emergency funds prevent emergencies from becoming disasters.",
-            "Lifestyle inflation is the enemy of early retirement.",
-            "Negotiate everything. Your salary, your bills, your rent.",
-            "Read one financial book a month. That's 12 upgrades to your brain a year.",
-            "Cash flow is the pulse of your financial health.",
-            "Don't borrow money to buy things that depreciate.",
-            "Consistency is the key to investing. Boring is good.",
-            "Check your bank account daily. Awareness cures bad habits.",
-            "Avoid bad debt (credit cards). Leverage good debt (mortgages).",
-            "A side hustle is your insurance policy against a layoff.",
-            "Generational wealth begins with a change in your daily habits.",
-            "The best investment you can make is in your own health.",
-            "Money buys convenience, not happiness. Know the difference.",
-            "Simplicity is the ultimate sophistication in finance.",
-            "Start today. Tomorrow is a thief.",
-            "You are richer than you think if you have zero debt."
+            "Live below your means, but expand your means."
         ];
 
-        const tipTextElement = document.getElementById('tip-text');
-        const tipLabelElement = document.getElementById('tip-label');
-
         function getTipOfTheDay() {
-            const now = new Date();
-            const start = new Date(now.getFullYear(), 0, 0);
-            const diff = now - start;
-            const oneDay = 1000 * 60 * 60 * 24;
-            const dayOfYear = Math.floor(diff / oneDay);
-            
-            const tipIndex = dayOfYear % tips.length;
-            
-            return tips[tipIndex];
+            const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+            return tips[dayOfYear % tips.length];
         }
 
-        function renderTip(text, label = "Tip of the Day") {
-            tipTextElement.classList.remove('fade-in');
-            
-            void tipTextElement.offsetWidth;
-            
-            tipTextElement.textContent = text;
-            tipLabelElement.textContent = label;
-            
-            tipTextElement.classList.add('fade-in');
+        function renderTip(text) {
+            const el = document.getElementById('tip-text');
+            el.classList.remove('fade-in');
+            void el.offsetWidth;
+            el.textContent = text;
+            el.classList.add('fade-in');
         }
 
         function showRandomTip() {
-            const randomIndex = Math.floor(Math.random() * tips.length);
-            renderTip(tips[randomIndex], "Random Wisdom");
+            renderTip(tips[Math.floor(Math.random() * tips.length)]);
         }
 
+        // --- 3. CORE GAME ENGINE ---
+        const moneyFormat = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 });
+        const balanceEl = document.getElementById('balance');
+        const incomeEl = document.getElementById('income-display');
+        const progressFill = document.getElementById('progress-fill');
+
+        function loadGame() {
+            const saved = localStorage.getItem('couchPotatoTycoon_V3'); // New Key for Pro Version
+            if (saved) {
+                const loadedState = JSON.parse(saved);
+                gameState.balance = loadedState.balance || 0;
+                gameState.hasWon = loadedState.hasWon || false;
+                
+                // Calculate Offline Earnings
+                if (loadedState.lastSaveTime) {
+                    const now = Date.now();
+                    const secondsGone = (now - loadedState.lastSaveTime) / 1000;
+                    
+                    let tempIncome = 0;
+                    loadedState.upgrades.forEach(u => tempIncome += u.income * u.count);
+                    
+                    if (tempIncome > 0 && secondsGone > 10) {
+                        const earned = secondsGone * tempIncome;
+                        gameState.balance += earned;
+                        showOfflineEarnings(earned);
+                    }
+                }
+
+                // Restore Upgrades
+                gameState.upgrades.forEach((u, i) => {
+                    if (loadedState.upgrades[i]) {
+                        u.count = loadedState.upgrades[i].count;
+                        u.cost = Math.floor(u.cost * Math.pow(1.15, u.count));
+                    }
+                });
+            }
+            recalcIncome();
+        }
+
+        function saveGame() {
+            // Safety check: Don't save if game loop is stopped (meaning we are resetting)
+            if (!gameLoopInterval) return;
+
+            gameState.lastSaveTime = Date.now();
+            localStorage.setItem('couchPotatoTycoon_V3', JSON.stringify(gameState));
+        }
+
+        // --- THE FIXED RESET FUNCTIONS ---
+        function hardReset() {
+            if(confirm("⚠️ RESET WARNING ⚠️\n\nAre you sure you want to delete your save file and start over? This cannot be undone.")) {
+                // 1. STOP THE LOOP IMMEDIATELY so it doesn't save again
+                if (gameLoopInterval) {
+                    clearInterval(gameLoopInterval);
+                    gameLoopInterval = null;
+                }
+                
+                // 2. Clear Storage
+                localStorage.removeItem('couchPotatoTycoon_V3');
+                
+                // 3. Force Reload
+                location.reload();
+            }
+        }
+
+        function prestigeReset() {
+             if (gameLoopInterval) {
+                clearInterval(gameLoopInterval);
+                gameLoopInterval = null;
+            }
+            localStorage.removeItem('couchPotatoTycoon_V3');
+            location.reload();
+        }
+
+        function recalcIncome() {
+            let totalIncome = 0;
+            gameState.upgrades.forEach(u => totalIncome += u.income * u.count);
+            gameState.income = totalIncome;
+            incomeEl.textContent = `+${moneyFormat.format(totalIncome)} / sec`;
+        }
+
+        // --- 4. UI RENDERER ---
+        function initStore() {
+            const grid = document.getElementById('store-grid');
+            grid.innerHTML = '';
+            gameState.upgrades.forEach((u, index) => {
+                const card = document.createElement('div');
+                card.id = `upgrade-card-${index}`;
+                card.className = 'upgrade-card disabled'; 
+                card.innerHTML = `
+                    <div class="upgrade-count" id="count-${index}">${u.count}</div>
+                    <span class="upgrade-name">${u.icon} ${u.name}</span>
+                    <span class="upgrade-cost" id="cost-${index}">${moneyFormat.format(u.cost)}</span>
+                    <span class="upgrade-rate">+${u.income}/s</span>
+                `;
+                card.onclick = () => buyUpgrade(index);
+                grid.appendChild(card);
+            });
+        }
+
+        function updateUI() {
+            balanceEl.textContent = moneyFormat.format(gameState.balance);
+            
+            // Progress Bar
+            let percentage = (gameState.balance / GOAL_AMOUNT) * 100;
+            if (percentage > 100) percentage = 100;
+            progressFill.style.width = `${percentage}%`;
+
+            // Win Condition
+            if (gameState.balance >= GOAL_AMOUNT && !gameState.hasWon) {
+                triggerWin();
+            }
+
+            // Store Buttons
+            gameState.upgrades.forEach((u, index) => {
+                const card = document.getElementById(`upgrade-card-${index}`);
+                const countEl = document.getElementById(`count-${index}`);
+                const costEl = document.getElementById(`cost-${index}`);
+
+                if (gameState.balance >= u.cost) { card.classList.remove('disabled'); } 
+                else { card.classList.add('disabled'); }
+
+                countEl.textContent = u.count;
+                costEl.textContent = moneyFormat.format(u.cost);
+            });
+        }
+
+        function buyUpgrade(index) {
+            const u = gameState.upgrades[index];
+            if (gameState.balance >= u.cost) {
+                gameState.balance -= u.cost;
+                u.count++;
+                u.cost = Math.floor(u.cost * 1.15);
+                recalcIncome();
+                updateUI();
+                saveGame();
+            }
+        }
+
+        // --- 5. INTERACTION & FX ---
+        function spawnFloatingText(amount, x, y) {
+            const el = document.createElement('div');
+            el.className = 'floating-text';
+            el.textContent = `+${moneyFormat.format(amount)}`;
+            el.style.left = `${x}px`;
+            el.style.top = `${y}px`;
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 800);
+        }
+
+        document.getElementById('click-btn').addEventListener('mousedown', (e) => {
+            gameState.balance += gameState.clickValue;
+            updateUI();
+            
+            const rect = e.target.getBoundingClientRect();
+            const x = e.clientX || (rect.left + rect.width / 2);
+            const y = e.clientY || (rect.top + rect.height / 2);
+            spawnFloatingText(gameState.clickValue, x, y);
+            saveGame();
+        });
+
+        // --- MODALS ---
+        function showOfflineEarnings(amount) {
+            document.getElementById('offline-amount').textContent = `+${moneyFormat.format(amount)}`;
+            document.getElementById('offline-modal').style.display = 'flex';
+        }
+
+        function triggerWin() {
+            gameState.hasWon = true;
+            document.getElementById('win-modal').style.display = 'flex';
+            saveGame();
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        // --- 6. INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
             renderTip(getTipOfTheDay());
+            initStore();
+            loadGame();
+            updateUI();
+
+            // Start Game Loop
+            gameLoopInterval = setInterval(() => {
+                if (gameState.income > 0) {
+                    gameState.balance += gameState.income / 10;
+                    updateUI();
+                    saveGame();
+                }
+            }, 100);
         });
 
     </script>
