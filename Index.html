@@ -71,7 +71,7 @@
             opacity: 0.8;
         }
 
-        /* --- WISDOM CARD --- */
+        /* --- CARDS (Used for Tips & Games) --- */
         .tip-card {
             background: var(--bg-glass);
             backdrop-filter: blur(20px);
@@ -120,7 +120,33 @@
         }
         .btn-shuffle:hover { background: var(--accent-green); color: var(--bg-deep); }
 
-        /* --- GAME UI --- */
+        /* --- TIC TAC TOE STYLES --- */
+        #ttt-board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            max-width: 260px;
+            margin: 20px auto;
+        }
+        .ttt-cell {
+            aspect-ratio: 1/1;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .ttt-cell:hover { background: rgba(255,255,255,0.1); }
+        .ttt-cell.x { color: var(--accent-green); text-shadow: 0 0 10px rgba(52, 211, 153, 0.5); }
+        .ttt-cell.o { color: var(--accent-red); text-shadow: 0 0 10px rgba(248, 113, 113, 0.5); }
+
+
+        /* --- TYCOON UI --- */
         .game-section {
             width: 100%;
             margin-top: 20px;
@@ -293,8 +319,16 @@
             <button class="btn-shuffle" onclick="showRandomTip()">↻ Shuffle Wisdom</button>
         </div>
 
+        <div class="tip-card">
+            <span class="tip-label">Investor Strategy Challenge</span>
+            <p style="margin-bottom: 20px; font-size: 0.9rem; color: var(--text-muted);">Beat the Market (AI) to prove your skills.</p>
+            <div id="ttt-board">
+                </div>
+            <p id="ttt-status" style="margin-top: 15px; color: var(--accent-gold); font-weight: bold;">Your Move, Investor.</p>
+            <button class="btn-shuffle" onclick="resetTTT()">Restart Challenge</button>
+        </div>
+
         <div class="game-section">
-            
             <div class="goal-container">
                 <div class="goal-labels">
                     <span>Progress</span>
@@ -327,9 +361,132 @@
     </div>
 
     <script>
-        // --- 1. CONFIGURATION & STATE ---
+        // ============================================
+        // 1. TIC TAC TOE ENGINE (INVESTOR vs MARKET)
+        // ============================================
+        let board = ["", "", "", "", "", "", "", "", ""];
+        const player = "X";
+        const ai = "O";
+        const tttBoard = document.getElementById("ttt-board");
+        const tttStatus = document.getElementById("ttt-status");
+
+        function initTTT() {
+            tttBoard.innerHTML = "";
+            board.forEach((cell, i) => {
+                const div = document.createElement("div");
+                div.className = "ttt-cell";
+                div.dataset.index = i;
+                div.innerText = cell;
+                if(cell) div.classList.add(cell.toLowerCase()); // Adds .x or .o class
+                div.onclick = () => handleMove(i);
+                tttBoard.appendChild(div);
+            });
+        }
+
+        function handleMove(i) {
+            if (board[i] || checkWinner(board)) return;
+            board[i] = player;
+            initTTT();
+            
+            if (!checkWinner(board) && board.includes("")) {
+                tttStatus.innerText = "Market is thinking...";
+                setTimeout(aiMove, 500); // Delay for realism
+            } else {
+                updateStatus();
+            }
+        }
+
+        function aiMove() {
+            let move;
+            // 20% Chance the AI makes a "Lazy" mistake so users can win
+            if (Math.random() < 0.20) {
+                let available = board.map((v, i) => v === "" ? i : null).filter(v => v !== null);
+                move = available[Math.floor(Math.random() * available.length)];
+            } else {
+                move = getBestMove(); // Minimax Algorithm
+            }
+            
+            board[move] = ai;
+            initTTT();
+            updateStatus();
+        }
+
+        function updateStatus() {
+            const win = checkWinner(board);
+            if (win === "X") tttStatus.innerText = "🏆 You beat the Market!";
+            else if (win === "O") tttStatus.innerText = "📉 Market Volatility won.";
+            else if (!board.includes("")) tttStatus.innerText = "🤝 It's a Market Draw.";
+            else tttStatus.innerText = "Your move, X.";
+        }
+
+        function checkWinner(b) {
+            const lines = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+            for (let l of lines) {
+                if (b[l[0]] && b[l[0]] === b[l[1]] && b[l[0]] === b[l[2]]) return b[l[0]];
+            }
+            return null;
+        }
+
+        function getBestMove() {
+            let bestScore = -Infinity;
+            let move;
+            for (let i = 0; i < 9; i++) {
+                if (board[i] === "") {
+                    board[i] = ai;
+                    let score = minimax(board, 0, false);
+                    board[i] = "";
+                    if (score > bestScore) {
+                        bestScore = score;
+                        move = i;
+                    }
+                }
+            }
+            return move;
+        }
+
+        function minimax(b, depth, isMaximizing) {
+            let result = checkWinner(b);
+            if (result === ai) return 10;
+            if (result === player) return -10;
+            if (!b.includes("")) return 0;
+
+            if (isMaximizing) {
+                let bestScore = -Infinity;
+                for (let i = 0; i < 9; i++) {
+                    if (b[i] === "") {
+                        b[i] = ai;
+                        bestScore = Math.max(bestScore, minimax(b, depth + 1, false));
+                        b[i] = "";
+                    }
+                }
+                return bestScore;
+            } else {
+                let bestScore = Infinity;
+                for (let i = 0; i < 9; i++) {
+                    if (b[i] === "") {
+                        b[i] = player;
+                        bestScore = Math.min(bestScore, minimax(b, depth + 1, true));
+                        b[i] = "";
+                    }
+                }
+                return bestScore;
+            }
+        }
+
+        function resetTTT() {
+            board = ["", "", "", "", "", "", "", "", ""];
+            tttStatus.innerText = "Your move, X.";
+            initTTT();
+        }
+
+
+        // ============================================
+        // 2. TYCOON & WISDOM ENGINE
+        // ============================================
+        
+        // --- CONFIGURATION ---
         const GOAL_AMOUNT = 1000000;
-        let gameLoopInterval = null; // Store interval ID to kill it on reset
+        let gameLoopInterval = null; 
 
         let gameState = {
             balance: 0.00,
@@ -347,7 +504,7 @@
             ]
         };
 
-        // --- 2. TIPS SYSTEM ---
+        // --- TIPS SYSTEM ---
         const tips = [
             "The best time to plant a money tree was 20 years ago. The second best time is today.",
             "Compound interest is the eighth wonder of the world. He who understands it, earns it.",
@@ -391,14 +548,14 @@
             renderTip(tips[Math.floor(Math.random() * tips.length)]);
         }
 
-        // --- 3. CORE GAME ENGINE ---
+        // --- CORE TYCOON ENGINE ---
         const moneyFormat = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 });
         const balanceEl = document.getElementById('balance');
         const incomeEl = document.getElementById('income-display');
         const progressFill = document.getElementById('progress-fill');
 
         function loadGame() {
-            const saved = localStorage.getItem('couchPotatoTycoon_V3'); // New Key for Pro Version
+            const saved = localStorage.getItem('couchPotatoTycoon_V3');
             if (saved) {
                 const loadedState = JSON.parse(saved);
                 gameState.balance = loadedState.balance || 0;
@@ -431,26 +588,18 @@
         }
 
         function saveGame() {
-            // Safety check: Don't save if game loop is stopped (meaning we are resetting)
-            if (!gameLoopInterval) return;
-
+            if (!gameLoopInterval) return; // Don't save if resetting
             gameState.lastSaveTime = Date.now();
             localStorage.setItem('couchPotatoTycoon_V3', JSON.stringify(gameState));
         }
 
-        // --- THE FIXED RESET FUNCTIONS ---
         function hardReset() {
             if(confirm("⚠️ RESET WARNING ⚠️\n\nAre you sure you want to delete your save file and start over? This cannot be undone.")) {
-                // 1. STOP THE LOOP IMMEDIATELY so it doesn't save again
                 if (gameLoopInterval) {
                     clearInterval(gameLoopInterval);
                     gameLoopInterval = null;
                 }
-                
-                // 2. Clear Storage
                 localStorage.removeItem('couchPotatoTycoon_V3');
-                
-                // 3. Force Reload
                 location.reload();
             }
         }
@@ -471,7 +620,7 @@
             incomeEl.textContent = `+${moneyFormat.format(totalIncome)} / sec`;
         }
 
-        // --- 4. UI RENDERER ---
+        // --- UI RENDERER ---
         function initStore() {
             const grid = document.getElementById('store-grid');
             grid.innerHTML = '';
@@ -529,7 +678,7 @@
             }
         }
 
-        // --- 5. INTERACTION & FX ---
+        // --- INTERACTION ---
         function spawnFloatingText(amount, x, y) {
             const el = document.createElement('div');
             el.className = 'floating-text';
@@ -567,9 +716,15 @@
             document.getElementById(id).style.display = 'none';
         }
 
-        // --- 6. INITIALIZATION ---
+        // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
+            // Load Wisdom
             renderTip(getTipOfTheDay());
+            
+            // Load TTT
+            initTTT();
+
+            // Load Tycoon
             initStore();
             loadGame();
             updateUI();
