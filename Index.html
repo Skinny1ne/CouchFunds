@@ -1,744 +1,1980 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Couch Funds | Tycoon Pro</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;800&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
-    
-    <style>
-        /* --- CORE STYLES --- */
-        :root {
-            --bg-deep: #022c22;
-            --bg-glass: rgba(255, 255, 255, 0.03);
-            --bg-glass-hover: rgba(255, 255, 255, 0.08);
-            --border-glass: rgba(255, 255, 255, 0.1);
-            --accent-gold: #fbbf24;
-            --accent-green: #34d399;
-            --accent-red: #f87171;
-            --text-main: #ecfdf5;
-            --text-muted: #6ee7b7;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Couch Funds | Build Wealth Without Leaving Your Couch 🛋️💰</title>
 
-        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-user-select: none; }
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Build wealth without the hustle. Get daily money tips, play games, and unlock secret AI side hustles. The anti-grind finance community.">
+  <meta name="keywords" content="passive income, side hustles, AI money making, financial tips, wealth building, couch potato millionaire">
+  <meta name="author" content="Couch Funds">
 
-        body {
-            background-color: var(--bg-deep);
-            color: var(--text-main);
-            font-family: 'Space Grotesk', sans-serif;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            overflow-x: hidden;
-            position: relative;
-            padding-bottom: 80px;
-        }
+  <!-- Open Graph (Facebook/LinkedIn) -->
+  <meta property="og:title" content="Couch Funds | Build Wealth. Stay Horizontal.">
+  <meta property="og:description" content="I just unlocked secret side hustles on Couch Funds! 🛋️💰 Beat the AI and learn how to make money online.">
+  <meta property="og:image" content="https://via.placeholder.com/1200x630/022c22/fbbf24?text=Couch+Funds">
+  <meta property="og:url" content="https://couchfunds.com">
+  <meta property="og:type" content="website">
 
-        /* --- BACKGROUND FX --- */
-        .orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            z-index: -1;
-            opacity: 0.4;
-            animation: float 20s infinite alternate;
-        }
-        .orb-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: var(--accent-green); }
-        .orb-2 { bottom: -10%; right: -10%; width: 40vw; height: 40vw; background: #065f46; animation-delay: -5s; }
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Couch Funds | Build Wealth. Stay Horizontal.">
+  <meta name="twitter:description" content="Beat the Market AI and unlock secret side hustles! 🛋️💰">
+  <meta name="twitter:image" content="https://via.placeholder.com/1200x630/022c22/fbbf24?text=Couch+Funds">
 
-        @keyframes float {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(30px, 50px); }
-        }
+  <link rel="canonical" href="https://couchfunds.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;800&family=Space+Grotesk:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
-        .container {
-            width: 90%;
-            max-width: 800px;
-            text-align: center;
-            z-index: 1;
-            padding-top: 60px;
-        }
+  <style>
+    :root {
+      --bg-deep: #022c22;
+      --bg-glass: rgba(255, 255, 255, 0.03);
+      --bg-glass-hover: rgba(255, 255, 255, 0.08);
+      --border-glass: rgba(255, 255, 255, 0.1);
+      --accent-gold: #fbbf24;
+      --accent-green: #34d399;
+      --accent-red: #f87171;
+      --accent-purple: #a78bfa;
+      --text-main: #ecfdf5;
+      --text-muted: #6ee7b7;
+    }
 
-        .brand {
-            font-family: 'Outfit', sans-serif;
-            font-weight: 800;
-            font-size: 1.5rem;
-            letter-spacing: 2px;
-            color: var(--accent-gold);
-            margin-bottom: 2rem;
-            text-transform: uppercase;
-            opacity: 0.8;
-        }
+    * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-user-select: none; }
 
-        /* --- CARDS (Used for Tips & Games) --- */
-        .tip-card {
-            background: var(--bg-glass);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border-glass);
-            border-radius: 30px;
-            padding: 3rem 2rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            margin-bottom: 3rem;
-            position: relative;
-            overflow: hidden;
-        }
+    body {
+      background-color: var(--bg-deep);
+      color: var(--text-main);
+      font-family: 'Space Grotesk', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+      position: relative;
+      padding-bottom: 80px;
+    }
 
-        .tip-label {
-            font-family: 'Outfit', sans-serif;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            color: var(--accent-green);
-            margin-bottom: 1rem;
-            display: block;
-        }
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      z-index: -1;
+      opacity: 0.4;
+      animation: float 20s infinite alternate;
+    }
+    .orb-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: var(--accent-green); }
+    .orb-2 { bottom: -10%; right: -10%; width: 40vw; height: 40vw; background: #065f46; animation-delay: -5s; }
 
-        .tip-content {
-            font-family: 'Outfit', sans-serif;
-            font-size: clamp(1.2rem, 3vw, 1.8rem);
-            font-weight: 600;
-            line-height: 1.4;
-            min-height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+    @keyframes float {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(30px, 50px); }
+    }
 
-        .btn-shuffle {
-            background: transparent;
-            border: 1px solid var(--accent-green);
-            color: var(--accent-green);
-            padding: 10px 30px;
-            border-radius: 50px;
-            font-size: 0.9rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Space Grotesk', sans-serif;
-            margin-top: 1.5rem;
-        }
-        .btn-shuffle:hover { background: var(--accent-green); color: var(--bg-deep); }
+    .container {
+      width: 90%;
+      max-width: 800px;
+      text-align: center;
+      z-index: 1;
+      padding-top: 60px;
+    }
 
-        /* --- TIC TAC TOE STYLES --- */
-        #ttt-board {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            max-width: 260px;
-            margin: 20px auto;
-        }
-        .ttt-cell {
-            aspect-ratio: 1/1;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--border-glass);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            font-weight: 800;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .ttt-cell:hover { background: rgba(255,255,255,0.1); }
-        .ttt-cell.x { color: var(--accent-green); text-shadow: 0 0 10px rgba(52, 211, 153, 0.5); }
-        .ttt-cell.o { color: var(--accent-red); text-shadow: 0 0 10px rgba(248, 113, 113, 0.5); }
+    .brand {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 1.5rem;
+      letter-spacing: 2px;
+      color: var(--accent-gold);
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      opacity: 0.8;
+    }
 
+    .achievements-bar {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
 
-        /* --- TYCOON UI --- */
-        .game-section {
-            width: 100%;
-            margin-top: 20px;
-            border-top: 1px solid var(--border-glass);
-            padding-top: 40px;
-        }
+    .achievement-badge {
+      background: var(--bg-glass);
+      border: 1px solid var(--border-glass);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+    }
 
-        /* PROGRESS BAR */
-        .goal-container {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-        .goal-labels { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 5px; }
-        .progress-bar-bg {
-            width: 100%;
-            height: 10px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        .progress-bar-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--accent-green), var(--accent-gold));
-            width: 0%;
-            transition: width 0.5s ease;
-            box-shadow: 0 0 10px var(--accent-green);
-        }
+    .achievement-badge.unlocked {
+      border-color: var(--accent-gold);
+      background: rgba(251, 191, 36, 0.1);
+      animation: badgeUnlock 0.5s ease;
+    }
 
-        .balance-display {
-            font-family: 'Outfit', sans-serif;
-            font-size: 3.5rem;
-            font-weight: 800;
-            color: var(--text-main);
-            text-shadow: 0 0 30px rgba(52, 211, 153, 0.2);
-            line-height: 1;
-        }
-        
-        .balance-subtitle { font-size: 1rem; color: var(--text-muted); margin-top: 5px; }
+    .achievement-badge.locked {
+      opacity: 0.3;
+      filter: grayscale(1);
+    }
 
-        /* CLICKER */
-        .click-area {
-            position: relative;
-            margin: 40px auto;
-            width: 200px;
-            height: 200px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+    @keyframes badgeUnlock {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
 
-        .couch-btn {
-            width: 160px;
-            height: 160px;
-            background: linear-gradient(135deg, #10b981, #059669);
-            border-radius: 50%;
-            border: 8px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 0 40px rgba(16, 185, 129, 0.3), inset 0 5px 20px rgba(255,255,255,0.2);
-            cursor: pointer;
-            font-size: 4rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.1s;
-            position: relative;
-            z-index: 10;
-        }
-        .couch-btn:active { transform: scale(0.90); }
-        .couch-btn:hover { transform: scale(1.05); box-shadow: 0 0 60px rgba(16, 185, 129, 0.5); }
+    .streak-display {
+      background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(52, 211, 153, 0.1));
+      border: 1px solid var(--accent-gold);
+      border-radius: 15px;
+      padding: 15px;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+    }
 
-        /* FLOATING TEXT */
-        .floating-text {
-            position: absolute;
-            color: var(--accent-gold);
-            font-weight: bold;
-            font-size: 1.5rem;
-            pointer-events: none;
-            animation: floatUp 0.8s ease-out forwards;
-            z-index: 20;
-        }
-        @keyframes floatUp {
-            0% { transform: translateY(0) scale(1); opacity: 1; }
-            100% { transform: translateY(-80px) scale(1.2); opacity: 0; }
-        }
+    .streak-flame {
+      font-size: 2rem;
+      animation: flicker 2s infinite;
+    }
 
-        /* UPGRADE STORE */
-        .store-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 15px;
-            width: 100%;
-        }
+    @keyframes flicker {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.1); }
+    }
 
-        .upgrade-card {
-            background: var(--bg-glass);
-            border: 1px solid var(--border-glass);
-            padding: 15px;
-            border-radius: 15px;
-            text-align: left;
-            transition: all 0.2s ease;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-        .upgrade-card.disabled { opacity: 0.5; cursor: default; filter: grayscale(1); pointer-events: none; }
-        .upgrade-card:not(.disabled):hover { background: var(--bg-glass-hover); transform: translateY(-3px); border-color: var(--accent-green); }
-        
-        .upgrade-name { font-weight: 700; display: block; margin-bottom: 5px; color: var(--text-main); }
-        .upgrade-cost { color: var(--accent-gold); font-size: 0.9rem; font-weight: 600; }
-        .upgrade-rate { color: var(--text-muted); font-size: 0.8rem; float: right; }
-        .upgrade-count { position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.3); padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; color: white; }
+    .streak-text {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
 
-        /* --- MODALS --- */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
-            z-index: 100; display: none; align-items: center; justify-content: center;
-        }
-        .modal-box {
-            background: var(--bg-deep); border: 2px solid var(--accent-gold);
-            padding: 40px; border-radius: 20px; max-width: 400px; text-align: center;
-            box-shadow: 0 0 50px rgba(251, 191, 36, 0.3);
-            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        
-        .modal-title { font-size: 2rem; color: var(--accent-gold); font-family: 'Outfit', sans-serif; margin-bottom: 10px; }
-        .modal-btn { margin-top: 20px; background: var(--accent-gold); color: var(--bg-deep); border: none; padding: 10px 30px; border-radius: 50px; font-weight: bold; cursor: pointer; }
+    .streak-subtitle {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
 
-        .footer-note { margin-top: 5rem; font-size: 0.9rem; color: rgba(255,255,255,0.4); line-height: 1.8; }
-        .fb-link { color: var(--accent-gold); text-decoration: none; font-weight: 700; border-bottom: 1px dotted var(--accent-gold); }
-        .reset-btn { background: none; border: 1px solid #f87171; color: #f87171; padding: 5px 15px; border-radius: 20px; margin-top: 20px; cursor: pointer; font-size: 0.8rem; }
-        .reset-btn:hover { background: rgba(248, 113, 113, 0.1); }
+    .leaderboard-section {
+      background: var(--bg-glass);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-glass);
+      border-radius: 20px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
 
-        .fade-in { animation: fadeIn 0.5s ease-in; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .leaderboard-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
 
-    </style>
+    .leaderboard-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .leaderboard-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      padding: 12px 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: 0.2s;
+    }
+
+    .leaderboard-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--accent-green);
+    }
+
+    .leaderboard-item.you {
+      border-color: var(--accent-gold);
+      background: rgba(251, 191, 36, 0.1);
+    }
+
+    .leaderboard-rank {
+      font-weight: 800;
+      font-size: 1.2rem;
+      color: var(--accent-green);
+      min-width: 40px;
+    }
+
+    .leaderboard-rank.gold { color: #fbbf24; }
+    .leaderboard-rank.silver { color: #94a3b8; }
+    .leaderboard-rank.bronze { color: #fb923c; }
+
+    .leaderboard-name {
+      flex: 1;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    .leaderboard-balance {
+      color: var(--accent-green);
+      font-weight: 700;
+    }
+
+    .social-share-bar {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .share-btn {
+      background: var(--bg-glass);
+      border: 1px solid var(--border-glass);
+      color: var(--text-main);
+      padding: 10px 20px;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Space Grotesk', sans-serif;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .share-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .share-btn.twitter { border-color: #1DA1F2; }
+    .share-btn.twitter:hover { background: #1DA1F2; color: white; }
+
+    .share-btn.facebook { border-color: #4267B2; }
+    .share-btn.facebook:hover { background: #4267B2; color: white; }
+
+    .share-btn.linkedin { border-color: #0077b5; }
+    .share-btn.linkedin:hover { background: #0077b5; color: white; }
+
+    .share-btn.whatsapp { border-color: #25D366; }
+    .share-btn.whatsapp:hover { background: #25D366; color: white; }
+
+    .tip-card {
+      background: var(--bg-glass);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-glass);
+      border-radius: 30px;
+      padding: 3rem 2rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      margin-bottom: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tip-label {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: var(--accent-green);
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .tip-content {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(1.2rem, 3vw, 1.8rem);
+      font-weight: 600;
+      line-height: 1.4;
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-shuffle {
+      background: transparent;
+      border: 1px solid var(--accent-green);
+      color: var(--accent-green);
+      padding: 10px 30px;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Space Grotesk', sans-serif;
+      margin-top: 1.5rem;
+    }
+    .btn-shuffle:hover { background: var(--accent-green); color: var(--bg-deep); transform: translateY(-2px); }
+    .btn-shuffle:active { transform: translateY(0); }
+
+    #ttt-board {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      max-width: 260px;
+      margin: 20px auto;
+    }
+    .ttt-cell {
+      aspect-ratio: 1/1;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border-glass);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .ttt-cell:hover:not(.x):not(.o) { background: rgba(255,255,255,0.1); transform: scale(1.05); }
+    .ttt-cell.x { color: var(--accent-green); text-shadow: 0 0 10px rgba(52, 211, 153, 0.5); }
+    .ttt-cell.o { color: var(--accent-red); text-shadow: 0 0 10px rgba(248, 113, 113, 0.5); }
+    .ttt-cell.x, .ttt-cell.o { cursor: default; }
+
+    .game-section {
+      width: 100%;
+      margin-top: 20px;
+      border-top: 1px solid var(--border-glass);
+      padding-top: 40px;
+    }
+
+    .goal-container {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+    .goal-labels { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 5px; }
+    .progress-bar-bg {
+      width: 100%;
+      height: 10px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-green), var(--accent-gold));
+      width: 0%;
+      transition: width 0.5s ease;
+      box-shadow: 0 0 10px var(--accent-green);
+    }
+
+    .progress-hint {
+      margin-top: 8px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .progress-hint b { color: var(--accent-green); }
+
+    .balance-display {
+      font-family: 'Outfit', sans-serif;
+      font-size: 3.5rem;
+      font-weight: 800;
+      color: var(--text-main);
+      text-shadow: 0 0 30px rgba(52, 211, 153, 0.2);
+      line-height: 1;
+    }
+
+    .balance-subtitle { font-size: 1rem; color: var(--text-muted); margin-top: 5px; }
+
+    .click-area {
+      position: relative;
+      margin: 40px auto;
+      width: 200px;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .couch-btn {
+      width: 160px;
+      height: 160px;
+      background: linear-gradient(135deg, #10b981, #059669);
+      border-radius: 50%;
+      border: 8px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 0 40px rgba(16, 185, 129, 0.3), inset 0 5px 20px rgba(255,255,255,0.2);
+      cursor: pointer;
+      font-size: 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.1s;
+      position: relative;
+      z-index: 10;
+    }
+    .couch-btn:active { transform: scale(0.90); }
+    .couch-btn:hover { transform: scale(1.05); box-shadow: 0 0 60px rgba(16, 185, 129, 0.5); }
+
+    .floating-text {
+      position: absolute;
+      color: var(--accent-gold);
+      font-weight: bold;
+      font-size: 1.5rem;
+      pointer-events: none;
+      animation: floatUp 0.8s ease-out forwards;
+      z-index: 20;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-80px) scale(1.2); opacity: 0; }
+    }
+
+    .store-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
+      width: 100%;
+    }
+
+    .upgrade-card {
+      background: var(--bg-glass);
+      border: 1px solid var(--border-glass);
+      padding: 15px;
+      border-radius: 15px;
+      text-align: left;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    .upgrade-card.disabled { opacity: 0.5; cursor: default; filter: grayscale(1); pointer-events: none; }
+    .upgrade-card:not(.disabled):hover { background: var(--bg-glass-hover); transform: translateY(-3px); border-color: var(--accent-green); }
+
+    .upgrade-name { font-weight: 700; display: block; margin-bottom: 5px; color: var(--text-main); }
+    .upgrade-cost { color: var(--accent-gold); font-size: 0.9rem; font-weight: 600; }
+    .upgrade-rate { color: var(--text-muted); font-size: 0.8rem; float: right; }
+    .upgrade-count { position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.3); padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; color: white; }
+
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
+      z-index: 100; display: none; align-items: center; justify-content: center;
+      padding: 20px;
+    }
+    .modal-box {
+      background: var(--bg-deep); border: 2px solid var(--accent-gold);
+      padding: 40px; border-radius: 20px; max-width: 450px; width: 100%; text-align: center;
+      box-shadow: 0 0 60px rgba(251, 191, 36, 0.2);
+      animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+    }
+    @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+    .modal-title { font-size: 2rem; color: var(--accent-gold); font-family: 'Outfit', sans-serif; margin-bottom: 10px; }
+    .modal-btn {
+      margin-top: 20px; background: var(--accent-gold); color: var(--bg-deep);
+      border: none; padding: 12px 36px; border-radius: 50px; font-weight: 800;
+      cursor: pointer; transition: 0.3s; font-family: 'Space Grotesk', sans-serif;
+    }
+    .modal-btn:hover { transform: scale(1.05); box-shadow: 0 0 15px var(--accent-gold); }
+    .modal-btn:active { transform: scale(0.98); }
+
+    .hustle-label { color: var(--accent-green); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; display: block;}
+    .hustle-text { font-size: 1.1rem; color: #fff; margin-bottom: 15px; font-weight: 600; line-height: 1.4; }
+    .hustle-row { text-align: left; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.1); }
+
+    .dossier-box {
+      background: #0f172a;
+      border: 1px solid var(--accent-green);
+      max-width: 600px;
+      width: 100%;
+      padding: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      max-height: 85vh;
+    }
+    .dossier-header {
+      background: var(--accent-green);
+      color: #0f172a;
+      padding: 15px;
+      font-family: 'Share Tech Mono', monospace;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .dossier-content {
+      padding: 30px;
+      overflow-y: auto;
+      text-align: left;
+    }
+    .dossier-content::-webkit-scrollbar { width: 8px; }
+    .dossier-content::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
+    .dossier-content::-webkit-scrollbar-thumb { background: var(--accent-green); border-radius: 4px; }
+
+    .dossier-title {
+      font-family: 'Outfit', sans-serif;
+      color: var(--accent-gold);
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding-bottom: 10px;
+    }
+    .checklist-item {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 15px;
+      font-size: 1rem;
+      line-height: 1.5;
+      color: #e2e8f0;
+    }
+    .checklist-number {
+      color: var(--accent-green);
+      font-family: 'Share Tech Mono', monospace;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+    .copy-btn {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: white;
+      padding: 10px;
+      width: 100%;
+      margin-top: 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Share Tech Mono', monospace;
+      transition: 0.2s;
+      font-weight: bold;
+    }
+    .copy-btn:hover { background: rgba(255,255,255,0.2); }
+    .copy-btn.copied { background: var(--accent-green); color: #0f172a; }
+
+    .footer-note { margin-top: 5rem; font-size: 0.9rem; color: rgba(255,255,255,0.4); line-height: 1.8; }
+    .fb-link { color: var(--accent-gold); text-decoration: none; font-weight: 700; border-bottom: 1px dotted var(--accent-gold); transition: 0.2s; }
+    .fb-link:hover { color: #fcd34d; }
+    .reset-btn { background: none; border: 1px solid #f87171; color: #f87171; padding: 5px 15px; border-radius: 20px; margin-top: 20px; cursor: pointer; font-size: 0.8rem; transition: 0.2s; }
+    .reset-btn:hover { background: rgba(248, 113, 113, 0.1); transform: scale(1.05); }
+
+    .fade-in { animation: fadeIn 0.5s ease-in; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    @media (max-width: 600px) {
+      .brand { font-size: 1.2rem; }
+      .tip-card { padding: 2rem 1.5rem; }
+      .balance-display { font-size: 2.5rem; }
+      .couch-btn { width: 140px; height: 140px; font-size: 3rem; }
+      .modal-box { padding: 30px 20px; }
+      .dossier-title { font-size: 1.4rem; }
+      .checklist-item { font-size: 0.9rem; }
+      .store-grid { grid-template-columns: 1fr; }
+      .achievement-badge { font-size: 0.75rem; padding: 6px 12px; }
+    }
+  </style>
 </head>
 <body>
 
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
 
-    <div id="offline-modal" class="modal-overlay">
-        <div class="modal-box">
-            <div class="modal-title">Welcome Back!</div>
-            <p>Your assets were working while you were gone.</p>
-            <h2 id="offline-amount" style="margin: 20px 0; font-size: 2.5rem; color: var(--accent-green);">+$0.00</h2>
-            <button class="modal-btn" onclick="closeModal('offline-modal')">Collect</button>
-        </div>
+  <!-- MODALS -->
+  <div id="offline-modal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-title">Welcome Back!</div>
+      <p>Your assets were working while you were gone.</p>
+      <h2 id="offline-amount" style="margin: 20px 0; font-size: 2.5rem; color: var(--accent-green);">+$0.00</h2>
+      <button class="modal-btn" onclick="closeModal('offline-modal')">Collect</button>
+    </div>
+  </div>
+
+  <div id="win-modal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-title">🏆 YOU MADE IT!</div>
+      <p>You reached $1,000,000 without leaving the couch.</p>
+      <div style="font-size: 4rem; margin: 20px;">🛋️👑</div>
+      <p style="margin-bottom: 15px;">You are a Couch Tycoon.</p>
+
+      <div class="social-share-bar">
+        <a href="#" class="share-btn twitter" onclick="shareToTwitter('millionaire'); return false;">
+          🐦 Share on Twitter
+        </a>
+        <a href="#" class="share-btn facebook" onclick="shareToFacebook(); return false;">
+          📘 Share on Facebook
+        </a>
+      </div>
+
+      <button class="modal-btn" onclick="closeModal('win-modal')">Keep Earning</button>
+      <button class="modal-btn" style="background: transparent; border: 1px solid var(--accent-gold); color: var(--accent-gold); margin-top: 10px;" onclick="prestigeReset()">Sell & Restart</button>
+    </div>
+  </div>
+
+  <div id="hustle-modal" class="modal-overlay">
+    <div class="modal-box" style="border-color: var(--accent-green);">
+      <div style="font-size: 3rem; margin-bottom: 10px;">🔓</div>
+      <div class="modal-title" style="color: var(--accent-green);">Secret Hustle Unlocked</div>
+      <p style="color: var(--text-muted); margin-bottom: 20px;">Reward for beating the Market AI.</p>
+
+      <div class="hustle-row">
+        <span class="hustle-label">The Idea</span>
+        <div id="hustle-idea" class="hustle-text">...</div>
+      </div>
+
+      <div class="hustle-row">
+        <span class="hustle-label">Tools & Platform</span>
+        <div id="hustle-tools" style="color: var(--accent-gold); font-weight: 700;">...</div>
+      </div>
+
+      <div class="social-share-bar">
+        <a href="#" class="share-btn twitter" onclick="shareToTwitter('hustle'); return false;">
+          🐦 Share Win
+        </a>
+        <a href="#" class="share-btn whatsapp" onclick="shareToWhatsApp(); return false;">
+          💬 WhatsApp
+        </a>
+      </div>
+
+      <button class="modal-btn" onclick="openDeepDive()">📂 Claim Knowledge</button>
+    </div>
+  </div>
+
+  <div id="deep-dive-modal" class="modal-overlay">
+    <div class="modal-box dossier-box">
+      <div class="dossier-header">
+        <span>CONFIDENTIAL DOSSIER</span>
+        <span>#<span id="dossier-id">001</span></span>
+      </div>
+      <div class="dossier-content">
+        <h2 id="dossier-title" class="dossier-title">Loading...</h2>
+        <div id="dossier-steps"></div>
+
+        <button class="copy-btn" onclick="copyDossier(event)">📋 COPY STRATEGY TO CLIPBOARD</button>
+        <button class="copy-btn" style="background:transparent; border:none; margin-top: 10px; color: #94a3b8;" onclick="closeModal('deep-dive-modal')">Close File</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="brand">Couch Funds</div>
+
+    <!-- ACHIEVEMENTS BAR -->
+    <div class="achievements-bar" id="achievements-bar"></div>
+
+    <!-- STREAK DISPLAY -->
+    <div class="streak-display" id="streak-display">
+      <div class="streak-flame">🔥</div>
+      <div>
+        <div class="streak-text" id="streak-text">0 Day Streak</div>
+        <div class="streak-subtitle" id="streak-subtitle">Come back tomorrow!</div>
+      </div>
     </div>
 
-    <div id="win-modal" class="modal-overlay">
-        <div class="modal-box">
-            <div class="modal-title">🏆 YOU MADE IT!</div>
-            <p>You reached $1,000,000 without leaving the couch.</p>
-            <div style="font-size: 4rem; margin: 20px;">🛋️👑</div>
-            <p>You are a Couch Tycoon.</p>
-            <button class="modal-btn" onclick="closeModal('win-modal')">Keep Earning</button>
-            <button class="modal-btn" style="background: transparent; border: 1px solid var(--accent-gold); color: var(--accent-gold); margin-top: 10px;" onclick="prestigeReset()">Sell & Restart</button>
-        </div>
+    <!-- LEADERBOARD -->
+    <div class="leaderboard-section">
+      <div class="leaderboard-title">
+        🏆 Top Couch Tycoons (Live)
+      </div>
+      <div class="leaderboard-list" id="leaderboard-list"></div>
+
+      <p style="margin-top: 15px; font-size: 0.85rem; color: var(--text-muted);" id="player-rank">
+        Connecting to live leaderboard...
+      </p>
+
+      <!-- ✅ ADDED: Share leaderboard rank -->
+      <div class="social-share-bar" style="margin-top: 12px;">
+        <a href="#" class="share-btn twitter" onclick="shareLeaderboard(); return false;">
+          🐦 Share My Rank
+        </a>
+      </div>
     </div>
 
-    <div class="container">
-        <div class="brand">Couch Funds</div>
-        
-        <div class="tip-card">
-            <span id="tip-label" class="tip-label">Tip of the Day</span>
-            <div id="tip-text" class="tip-content">Loading wisdom...</div>
-            <button class="btn-shuffle" onclick="showRandomTip()">↻ Shuffle Wisdom</button>
-        </div>
+    <!-- TIP CARD -->
+    <div class="tip-card">
+      <span id="tip-label" class="tip-label">Tip of the Day</span>
+      <div id="tip-text" class="tip-content">Loading wisdom...</div>
+      <button class="btn-shuffle" onclick="showRandomTip()">↻ Shuffle Wisdom</button>
 
-        <div class="tip-card">
-            <span class="tip-label">Investor Strategy Challenge</span>
-            <p style="margin-bottom: 20px; font-size: 0.9rem; color: var(--text-muted);">Beat the Market (AI) to prove your skills.</p>
-            <div id="ttt-board">
-                </div>
-            <p id="ttt-status" style="margin-top: 15px; color: var(--accent-gold); font-weight: bold;">Your Move, Investor.</p>
-            <button class="btn-shuffle" onclick="resetTTT()">Restart Challenge</button>
-        </div>
-
-        <div class="game-section">
-            <div class="goal-container">
-                <div class="goal-labels">
-                    <span>Progress</span>
-                    <span>Goal: $1,000,000</span>
-                </div>
-                <div class="progress-bar-bg">
-                    <div id="progress-fill" class="progress-bar-fill"></div>
-                </div>
-            </div>
-
-            <div class="game-header">
-                <div class="balance-subtitle">Net Worth</div>
-                <div id="balance" class="balance-display">$0.00</div>
-                <div id="income-display" class="balance-subtitle" style="color: var(--accent-green); margin-top: 5px;">+$0.00 / sec</div>
-            </div>
-
-            <div class="click-area">
-                <div class="couch-btn" id="click-btn">🛋️</div>
-            </div>
-
-            <div class="store-grid" id="store-grid">
-                </div>
-        </div>
-
-        <div class="footer-note">
-            Tips update daily.<br>
-            Join the community on Facebook: <a href="https://web.facebook.com/profile.php?id=61587482075467" target="_blank" class="fb-link">CouchFunds</a><br>
-            <button class="reset-btn" onclick="hardReset()">⚠️ Wipe Save & Reset</button>
-        </div>
+      <div class="social-share-bar">
+        <a href="#" class="share-btn twitter" onclick="shareCurrentTip(); return false;">
+          🐦 Share This Tip
+        </a>
+      </div>
     </div>
 
-    <script>
-        // ============================================
-        // 1. TIC TAC TOE ENGINE (INVESTOR vs MARKET)
-        // ============================================
-        let board = ["", "", "", "", "", "", "", "", ""];
-        const player = "X";
-        const ai = "O";
-        const tttBoard = document.getElementById("ttt-board");
-        const tttStatus = document.getElementById("ttt-status");
+    <!-- TIC TAC TOE -->
+    <div class="tip-card">
+      <span class="tip-label">Investor Strategy Challenge</span>
+      <p style="margin-bottom: 20px; font-size: 0.9rem; color: var(--text-muted);">Beat the Market (AI) to unlock a <b style="color: var(--accent-green)">Secret Hustle</b>.</p>
+      <div id="ttt-board"></div>
+      <p id="ttt-status" style="margin-top: 15px; color: var(--accent-gold); font-weight: bold;">Your Move, Investor.</p>
+      <button class="btn-shuffle" onclick="resetTTT()">Restart Challenge</button>
+    </div>
 
-        function initTTT() {
-            tttBoard.innerHTML = "";
-            board.forEach((cell, i) => {
-                const div = document.createElement("div");
-                div.className = "ttt-cell";
-                div.dataset.index = i;
-                div.innerText = cell;
-                if(cell) div.classList.add(cell.toLowerCase()); // Adds .x or .o class
-                div.onclick = () => handleMove(i);
-                tttBoard.appendChild(div);
-            });
-        }
+    <!-- TYCOON GAME -->
+    <div class="game-section">
+      <div class="goal-container">
+        <div class="goal-labels">
+          <span>Progress</span>
+          <span>Goal: $1,000,000</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div id="progress-fill" class="progress-bar-fill"></div>
+        </div>
 
-        function handleMove(i) {
-            if (board[i] || checkWinner(board)) return;
-            board[i] = player;
-            initTTT();
-            
-            if (!checkWinner(board) && board.includes("")) {
-                tttStatus.innerText = "Market is thinking...";
-                setTimeout(aiMove, 500); // Delay for realism
-            } else {
-                updateStatus();
-            }
-        }
+        <!-- ✅ ADDED: visible progress text -->
+        <div class="progress-hint">
+          <span id="progress-text">$0 / $1,000,000</span>
+          <span id="progress-percent"><b>0.0%</b></span>
+        </div>
+      </div>
 
-        function aiMove() {
-            let move;
-            // 20% Chance the AI makes a "Lazy" mistake so users can win
-            if (Math.random() < 0.20) {
-                let available = board.map((v, i) => v === "" ? i : null).filter(v => v !== null);
-                move = available[Math.floor(Math.random() * available.length)];
-            } else {
-                move = getBestMove(); // Minimax Algorithm
-            }
-            
-            board[move] = ai;
-            initTTT();
-            updateStatus();
-        }
+      <div class="game-header">
+        <div class="balance-subtitle">Net Worth</div>
+        <div id="balance" class="balance-display">$0.00</div>
+        <div id="income-display" class="balance-subtitle" style="color: var(--accent-green); margin-top: 5px;">+$0.00 / sec</div>
+      </div>
 
-        function updateStatus() {
-            const win = checkWinner(board);
-            if (win === "X") tttStatus.innerText = "🏆 You beat the Market!";
-            else if (win === "O") tttStatus.innerText = "📉 Market Volatility won.";
-            else if (!board.includes("")) tttStatus.innerText = "🤝 It's a Market Draw.";
-            else tttStatus.innerText = "Your move, X.";
-        }
+      <div class="click-area">
+        <div class="couch-btn" id="click-btn">🛋️</div>
+      </div>
 
-        function checkWinner(b) {
-            const lines = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-            for (let l of lines) {
-                if (b[l[0]] && b[l[0]] === b[l[1]] && b[l[0]] === b[l[2]]) return b[l[0]];
-            }
-            return null;
-        }
+      <div class="store-grid" id="store-grid"></div>
+    </div>
 
-        function getBestMove() {
-            let bestScore = -Infinity;
-            let move;
-            for (let i = 0; i < 9; i++) {
-                if (board[i] === "") {
-                    board[i] = ai;
-                    let score = minimax(board, 0, false);
-                    board[i] = "";
-                    if (score > bestScore) {
-                        bestScore = score;
-                        move = i;
-                    }
-                }
-            }
-            return move;
-        }
+    <div class="footer-note">
+      Tips update daily. Track your streak!<br>
+      Join the community: <a href="https://web.facebook.com/profile.php?id=61587482075467" target="_blank" class="fb-link">CouchFunds on Facebook</a><br>
+      <button class="reset-btn" onclick="hardReset()">⚠️ Wipe Save & Reset</button>
+    </div>
+  </div>
 
-        function minimax(b, depth, isMaximizing) {
-            let result = checkWinner(b);
-            if (result === ai) return 10;
-            if (result === player) return -10;
-            if (!b.includes("")) return 0;
+  <!-- =========================================================
+       FIREBASE (Firestore Live Leaderboard) - REQUIRED
+       ========================================================= -->
+  <script type="module">
+    // Create a promise so the normal script can wait until Firebase is ready
+    window.__firebaseInitPromise = (async () => {
+      try {
+        const { initializeApp } = await import("https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js");
+        const {
+          getFirestore, doc, setDoc, collection, query, orderBy, limit, onSnapshot, serverTimestamp
+        } = await import("https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js");
 
-            if (isMaximizing) {
-                let bestScore = -Infinity;
-                for (let i = 0; i < 9; i++) {
-                    if (b[i] === "") {
-                        b[i] = ai;
-                        bestScore = Math.max(bestScore, minimax(b, depth + 1, false));
-                        b[i] = "";
-                    }
-                }
-                return bestScore;
-            } else {
-                let bestScore = Infinity;
-                for (let i = 0; i < 9; i++) {
-                    if (b[i] === "") {
-                        b[i] = player;
-                        bestScore = Math.min(bestScore, minimax(b, depth + 1, true));
-                        b[i] = "";
-                    }
-                }
-                return bestScore;
-            }
-        }
-
-        function resetTTT() {
-            board = ["", "", "", "", "", "", "", "", ""];
-            tttStatus.innerText = "Your move, X.";
-            initTTT();
-        }
-
-
-        // ============================================
-        // 2. TYCOON & WISDOM ENGINE
-        // ============================================
-        
-        // --- CONFIGURATION ---
-        const GOAL_AMOUNT = 1000000;
-        let gameLoopInterval = null; 
-
-        let gameState = {
-            balance: 0.00,
-            income: 0.00,
-            clickValue: 1.00,
-            hasWon: false,
-            lastSaveTime: Date.now(),
-            upgrades: [
-                { id: 0, name: "Loose Change", cost: 15, income: 0.5, count: 0, icon: "🪙" },
-                { id: 1, name: "Piggy Bank", cost: 100, income: 4, count: 0, icon: "🐷" },
-                { id: 2, name: "Lemonade Stand", cost: 1100, income: 12, count: 0, icon: "🍋" },
-                { id: 3, name: "Vending Machine", cost: 12000, income: 48, count: 0, icon: "🍫" },
-                { id: 4, name: "ATM", cost: 130000, income: 240, count: 0, icon: "🏧" },
-                { id: 5, name: "Bank Branch", cost: 1400000, income: 960, count: 0, icon: "🏦" }
-            ]
+        const firebaseConfig = {
+          apiKey: "AIzaSyCs6VvYUFCQl7TlLgrY62jyfBUFhj5wMwo",
+          authDomain: "couchfunds-fc312.firebaseapp.com",
+          projectId: "couchfunds-fc312",
+          storageBucket: "couchfunds-fc312.firebasestorage.app",
+          messagingSenderId: "696869566029",
+          appId: "1:696869566029:web:ae6b0f4b2b6e481fa1ce04"
         };
 
-        // --- TIPS SYSTEM ---
-        const tips = [
-            "The best time to plant a money tree was 20 years ago. The second best time is today.",
-            "Compound interest is the eighth wonder of the world. He who understands it, earns it.",
-            "Wealth isn't about having a lot of money; it's about having a lot of options.",
-            "Don't save what is left after spending; spend what is left after saving.",
-            "A budget is telling your money where to go instead of wondering where it went.",
-            "Rich people stay rich by living like they're broke. Broke people stay broke by living like they're rich.",
-            "Passive income is the only true financial freedom.",
-            "Invest in yourself. Your knowledge is the engine of your wealth.",
-            "Automate your savings. Willpower is a limited resource.",
-            "The goal is not to look rich, the goal is to be rich.",
-            "Do not wait to buy real estate. Buy real estate and wait.",
-            "Your network is your net worth.",
-            "Time in the market beats timing the market.",
-            "Assets put money in your pocket. Liabilities take money out of your pocket.",
-            "Don't trade your time for money forever. Trade your money for time.",
-            "Price is what you pay. Value is what you get.",
-            "A penny saved is a penny earned.",
-            "The rich invest in time, the poor invest in money.",
-            "If you can't buy it twice, you can't afford it.",
-            "Money is a terrible master but an excellent servant.",
-            "Track your net worth, not just your salary.",
-            "An investment in knowledge pays the best interest.",
-            "Live below your means, but expand your means."
-        ];
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-        function getTipOfTheDay() {
-            const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
-            return tips[dayOfYear % tips.length];
+        window.__FIREBASE__ = {
+          db, doc, setDoc, collection, query, orderBy, limit, onSnapshot, serverTimestamp
+        };
+
+        return true;
+      } catch (e) {
+        console.error("Firebase init failed:", e);
+        return false;
+      }
+    })();
+  </script>
+
+  <script>
+    // ============================================
+    // PLAYER IDENTITY (for leaderboard)
+    // ============================================
+    function getPlayerId() {
+      let id = localStorage.getItem("cf_player_id");
+      if (!id) {
+        id = (crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()) + "_" + Math.random().toString(16).slice(2);
+        localStorage.setItem("cf_player_id", id);
+      }
+      return id;
+    }
+
+    function sanitizeName(name) {
+      return (name || "")
+        .replace(/[<>]/g, "")
+        .trim()
+        .slice(0, 16) || "Anonymous";
+    }
+
+    function getUsername() {
+      let name = localStorage.getItem("cf_username");
+      if (!name) {
+        name = sanitizeName(prompt("Choose a leaderboard name (max 16 chars):"));
+        localStorage.setItem("cf_username", name);
+      }
+      return sanitizeName(name);
+    }
+
+    const PLAYER_ID = getPlayerId();
+    let USERNAME = getUsername();
+
+    window.renameCouchFundsUser = () => {
+      USERNAME = sanitizeName(prompt("New name (max 16 chars):"));
+      localStorage.setItem("cf_username", USERNAME);
+      markLeaderboardDirty();
+    };
+
+    // ============================================
+    // ACHIEVEMENTS SYSTEM
+    // ============================================
+    const achievements = [
+      { id: 'first_click', name: 'First Click', icon: '👆', condition: () => gameState.totalClicks >= 1 },
+      { id: 'first_1k', name: '$1,000', icon: '💰', condition: () => gameState.balance >= 1000 },
+      { id: 'market_beater', name: 'Market Beater', icon: '🎯', condition: () => gameState.hasBeatenAI },
+      { id: 'first_upgrade', name: 'Investor', icon: '📈', condition: () => gameState.totalUpgrades >= 1 },
+      { id: 'millionaire', name: 'Millionaire', icon: '👑', condition: () => gameState.balance >= 1000000 },
+      { id: 'week_streak', name: '7 Day Streak', icon: '🔥', condition: () => gameState.streak >= 7 }
+    ];
+
+    function checkAchievements() {
+      let newUnlocks = false;
+      achievements.forEach(ach => {
+        if (!gameState.unlockedAchievements.includes(ach.id) && ach.condition()) {
+          gameState.unlockedAchievements.push(ach.id);
+          newUnlocks = true;
+        }
+      });
+      if (newUnlocks) {
+        renderAchievements();
+        saveGame();
+      }
+    }
+
+    function renderAchievements() {
+      const container = document.getElementById('achievements-bar');
+      container.innerHTML = '';
+      achievements.forEach(ach => {
+        const badge = document.createElement('div');
+        const isUnlocked = gameState.unlockedAchievements.includes(ach.id);
+        badge.className = `achievement-badge ${isUnlocked ? 'unlocked' : 'locked'}`;
+        badge.innerHTML = `<span>${ach.icon}</span><span>${ach.name}</span>`;
+        badge.title = isUnlocked ? `Unlocked: ${ach.name}` : `Locked: ${ach.name}`;
+        container.appendChild(badge);
+      });
+    }
+
+    // ============================================
+    // STREAK SYSTEM
+    // ============================================
+    function updateStreak() {
+      const today = new Date().toDateString();
+      const lastVisit = gameState.lastVisitDate;
+
+      if (lastVisit !== today) {
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const yesterdayStr = yesterday.toDateString();
+
+        if (lastVisit === yesterdayStr) {
+          gameState.streak += 1;
+        } else if (lastVisit !== today) {
+          gameState.streak = 1;
         }
 
-        function renderTip(text) {
-            const el = document.getElementById('tip-text');
-            el.classList.remove('fade-in');
-            void el.offsetWidth;
-            el.textContent = text;
-            el.classList.add('fade-in');
+        gameState.lastVisitDate = today;
+        saveGame();
+      }
+
+      renderStreak();
+    }
+
+    function renderStreak() {
+      const streakText = document.getElementById('streak-text');
+      const streakSubtitle = document.getElementById('streak-subtitle');
+
+      streakText.textContent = `${gameState.streak} Day Streak`;
+
+      if (gameState.streak >= 7) {
+        streakSubtitle.textContent = "🌟 You're on fire! Keep it up!";
+      } else if (gameState.streak >= 3) {
+        streakSubtitle.textContent = "Great momentum! Don't break it!";
+      } else {
+        streakSubtitle.textContent = "Come back tomorrow to build your streak!";
+      }
+
+      checkAchievements();
+    }
+
+    // ============================================
+    // FIREBASE LEADERBOARD (LIVE)
+    // ============================================
+    let leaderboardUnsubscribe = null;
+    let leaderboardDirty = false;
+    let lastLeaderboardSyncMs = 0;
+
+    function markLeaderboardDirty() {
+      leaderboardDirty = true;
+    }
+
+    async function safeWaitForFirebase(maxMs = 6000) {
+      const start = Date.now();
+      while (Date.now() - start < maxMs) {
+        if (window.__firebaseInitPromise) {
+          const ok = await window.__firebaseInitPromise;
+          if (ok && window.__FIREBASE__) return true;
+          return false;
         }
+        await new Promise(r => setTimeout(r, 50));
+      }
+      return false;
+    }
 
-        function showRandomTip() {
-            renderTip(tips[Math.floor(Math.random() * tips.length)]);
+    async function syncScoreToFirestore(force = false) {
+      if (!window.__FIREBASE__) return;
+
+      const now = Date.now();
+      const minInterval = 2500;
+      if (!force && (now - lastLeaderboardSyncMs < minInterval) && !leaderboardDirty) return;
+
+      const { db, doc, setDoc, serverTimestamp } = window.__FIREBASE__;
+
+      try {
+        const balanceInt = Math.max(0, Math.floor(gameState.balance));
+        await setDoc(
+          doc(db, "leaderboard", PLAYER_ID),
+          {
+            name: sanitizeName(USERNAME),
+            balance: balanceInt,
+            updatedAt: serverTimestamp()
+          },
+          { merge: true }
+        );
+        lastLeaderboardSyncMs = now;
+        leaderboardDirty = false;
+      } catch (err) {
+        console.error("Firestore sync error:", err);
+      }
+    }
+
+    function startLiveLeaderboard() {
+      if (!window.__FIREBASE__) return;
+
+      const { db, collection, query, orderBy, limit, onSnapshot } = window.__FIREBASE__;
+
+      if (leaderboardUnsubscribe) leaderboardUnsubscribe();
+
+      const q = query(
+        collection(db, "leaderboard"),
+        orderBy("balance", "desc"),
+        limit(10)
+      );
+
+      leaderboardUnsubscribe = onSnapshot(q, (snapshot) => {
+        const players = [];
+        snapshot.forEach(d => players.push({ id: d.id, ...d.data() }));
+        renderLeaderboard(players);
+      }, (err) => {
+        console.error("Leaderboard listener error:", err);
+        document.getElementById("player-rank").textContent = "Leaderboard offline (check Firestore rules).";
+      });
+    }
+
+    function renderLeaderboard(players) {
+      const list = document.getElementById("leaderboard-list");
+      list.innerHTML = "";
+
+      if (!players.length) {
+        document.getElementById("player-rank").textContent = "Be the first on the leaderboard 👀";
+        return;
+      }
+
+      let yourRank = null;
+
+      players.forEach((p, index) => {
+        if (p.id === PLAYER_ID) yourRank = index + 1;
+
+        const item = document.createElement("div");
+        item.className = `leaderboard-item ${p.id === PLAYER_ID ? "you" : ""}`;
+
+        let rankClass = "";
+        if (index === 0) rankClass = "gold";
+        else if (index === 1) rankClass = "silver";
+        else if (index === 2) rankClass = "bronze";
+
+        item.innerHTML = `
+          <div class="leaderboard-rank ${rankClass}">#${index + 1}</div>
+          <div class="leaderboard-name">${sanitizeName(p.name || "Anonymous")}</div>
+          <div class="leaderboard-balance">${moneyFormat.format(Number(p.balance || 0))}</div>
+        `;
+
+        list.appendChild(item);
+      });
+
+      const msg = document.getElementById("player-rank");
+      msg.textContent = yourRank
+        ? `You're #${yourRank} on the live leaderboard.`
+        : `Not in top 10 yet — keep earning to break in.`;
+    }
+
+    // ============================================
+    // SOCIAL SHARING
+    // ============================================
+    // ✅ Updated: use your current domain (shangtai.com)
+    const SHARE_URL = "https://shangtai.com";
+
+    function shareToTwitter(type) {
+      let text = '';
+
+      if (type === 'hustle') {
+        text = `I just beat the Market AI and unlocked a Secret Side Hustle on Couch Funds! 🛋️💰\n\nBuild wealth. Stay horizontal.\n`;
+      } else if (type === 'millionaire') {
+        text = `I just became a Couch Potato Millionaire! 🛋️👑💰\n\nNo grind, just smart passive income.\n`;
+      }
+
+      const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(SHARE_URL)}&hashtags=CouchFunds,PassiveIncome,SideHustle`;
+      window.open(twitterUrl, '_blank', 'width=550,height=420');
+    }
+
+    function shareToFacebook() {
+      const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(SHARE_URL)}`;
+      window.open(facebookUrl, '_blank', 'width=550,height=420');
+    }
+
+    function shareToWhatsApp() {
+      const text = `I just unlocked a Secret Side Hustle on Couch Funds! 🛋️💰\n\nCheck it out: ${SHARE_URL}`;
+      const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+      window.open(whatsappUrl, '_blank');
+    }
+
+    function shareCurrentTip() {
+      const tip = document.getElementById('tip-text').textContent;
+      const text = `💡 Money Tip:\n\n"${tip}"\n\nFrom Couch Funds - Daily wealth wisdom`;
+      const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(SHARE_URL)}&hashtags=CouchFunds,MoneyTips`;
+      window.open(twitterUrl, '_blank', 'width=550,height=420');
+    }
+
+    // ✅ Added: Share leaderboard rank button logic (Feature #1-4)
+    function shareLeaderboard() {
+      const rankText = document.getElementById('player-rank').textContent;
+      const balanceText = document.getElementById('balance').textContent;
+
+      const text = `🏆 Couch Funds leaderboard update:\n${rankText}\nNet Worth: ${balanceText}\n`;
+
+      const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(SHARE_URL)}&hashtags=CouchFunds,TycoonGame`;
+      window.open(twitterUrl, '_blank', 'width=550,height=420');
+    }
+
+    // ============================================
+    // SECRET HUSTLE DATABASE (30 HIGH-DETAIL ITEMS)
+    // ============================================
+    // ✅ Restored in full (your exact structure)
+    let currentHustle = null;
+
+    const secretHustles = [
+      { 
+        idea: "AI Children's Book Empire", 
+        tools: "Claude (Writing), Midjourney (Art)", 
+        platform: "Amazon KDP", 
+        action: "Publish consistent character stories without drawing a single line.",
+        steps: [
+          "Ask Claude 3.0: 'Write a 24-page rhyming children's story (AABB rhyme scheme) about a [Topic] for 3-5 year olds.'",
+          "Open Midjourney. Create a character sheet first to ensure consistency. Use the same seed number (--seed 1234) for every subsequent prompt.",
+          "Generate 12-14 illustrations (one per spread). Prompt style: 'watercolor style, cute, pastel colors, white background'.",
+          "Use a free upscaler like BigJPG to increase image resolution to 300 DPI (essential for print).",
+          "Go to Canva. Search 'KDP Book 8.5x8.5'. Upload text on one side, image on the other.",
+          "Download as 'PDF Print' and upload to Amazon KDP. Set royalties to 60%."
+        ]
+      },
+      { 
+        idea: "Faceless Lofi Channels", 
+        tools: "Suno AI (Music), Midjourney (Visuals)", 
+        platform: "YouTube", 
+        action: "Create 24/7 study music streams or 1-hour loops for passive ad revenue.",
+        steps: [
+          "Go to Suno.ai or Udio. Prompt: 'lofi hip hop, chill, instrumental, study beats, no lyrics'. Generate 10 songs.",
+          "Download the tracks and stitch them together in CapCut or DaVinci Resolve to make a 1-hour loop.",
+          "Generate a 16:9 image in Midjourney: 'cozy anime bedroom, raining window, lofi aesthetic, night time --ar 16:9'.",
+          "Use 'LeiaPix' or 'RunwayML' to add slight motion to the image (like moving rain or candle flicker).",
+          "Upload to YouTube. Title for SEO: 'Lofi Beats to Study/Relax To 2026'.",
+          "Once monetized, this earns passive ad revenue forever."
+        ]
+      },
+      { 
+        idea: "Viral History Shorts", 
+        tools: "ChatGPT (Script), ElevenLabs (Voice)", 
+        platform: "TikTok / YouTube Shorts", 
+        action: "Mass-produce 'Did You Know?' history facts videos.",
+        steps: [
+          "Ask ChatGPT: 'Give me 5 crazy, lesser-known historical facts about the Roman Empire that are shocking'.",
+          "Take the script to ElevenLabs. Use the 'Adam' or 'Antoni' voice for a narrator vibe.",
+          "Import audio into CapCut. Use the 'Auto-Captions' feature to put big, colorful text on screen (Alex Hormozi style).",
+          "Overlay stock footage or AI images related to the fact.",
+          "Post the same video to TikTok, Instagram Reels, and YouTube Shorts simultaneously."
+        ]
+      },
+      { 
+        idea: "Kawaii Sticker Shop", 
+        tools: "Midjourney (--tile), Adobe Express", 
+        platform: "Redbubble / Etsy", 
+        action: "Sell cute physical stickers without holding any inventory.",
+        steps: [
+          "Go to Midjourney. Prompt: 'cute kawaii sushi sticker, white background, bold black outline, vector style, flat color'.",
+          "Upscale your favorite result.",
+          "Upload the image to Adobe Express (Free) or Remove.bg to delete the white background transparently.",
+          "Create a Redbubble account. Upload the design.",
+          "Enable 'Stickers' and 'Magnets'. Set your margin to 50%.",
+          "Use tags like: 'planner stickers', 'laptop decal', 'cute aesthetic'."
+        ]
+      },
+      { 
+        idea: "AI Stock Photography", 
+        tools: "Midjourney V6", 
+        platform: "Wirestock / Adobe Stock", 
+        action: "Generate photorealistic stock images for businesses to license.",
+        steps: [
+          "Identify gaps in the market (e.g., 'diverse corporate teams', 'futuristic green energy', 'remote work setups').",
+          "Prompt Midjourney V6: 'diverse business meeting, modern office, natural lighting, shot on 35mm --style raw --ar 4:3'.",
+          "Upscale the image to at least 4MP using an AI upscaler.",
+          "Sign up for Wirestock (it uploads to Adobe, Shutterstock, and Getty all at once for you).",
+          "Upload your images. IMPORTANT: Mark them as 'AI Generated' to avoid being banned."
+        ]
+      },
+      {
+        idea: "Speed Translation",
+        tools: "DeepL (Drafting), Grammarly (Polish)",
+        platform: "Fiverr / Upwork",
+        action: "Translate documents rapidly using AI, then manually refine.",
+        steps: [
+          "Speak a second language? Create a gig: 'I will translate 1000 words English to [Language] in 2 hours'.",
+          "When you get an order, run the text through DeepL Pro (it is far more accurate than Google).",
+          "Read the output manually. This is the 'premium' part—fix idioms and tone that AI gets wrong.",
+          "Run the final English side through Grammarly to ensure it's perfect.",
+          "Deliver the file. Speed is your selling point here."
+        ]
+      },
+      {
+        idea: "Seamless Pattern Design",
+        tools: "Midjourney (--tile)",
+        platform: "Spoonflower",
+        action: "Design fabric and wallpaper patterns for print-on-demand decor.",
+        steps: [
+          "Prompt Midjourney: 'vintage floral pattern, pastel colors, watercolor style --tile'. The --tile command creates a perfect repeating pattern.",
+          "Check the seamlessness on a site like Pycheung's Pattern Checker.",
+          "Upscale the image to 300 DPI.",
+          "Create a shop on Spoonflower.",
+          "Upload your designs. People buy them as fabric, wallpaper, or wrapping paper. You get a commission."
+        ]
+      },
+      {
+        idea: "ATS Resume Optimization",
+        tools: "ChatGPT (Analysis), Canva",
+        platform: "LinkedIn / Fiverr",
+        action: "Rewrite resumes to beat corporate hiring bots.",
+        steps: [
+          "Ask the client for their old CV and the specific Job Description they want to apply for.",
+          "Paste both into ChatGPT. Prompt: 'Act as a Hiring Manager. Rewrite this resume bullet points to match the keywords in this Job Description. Use action verbs.'",
+          "Take the new text and paste it into a clean, modern Canva Resume Template.",
+          "Export as PDF.",
+          "Charge $50-$150 per resume package."
+        ]
+      },
+      {
+        idea: "Niche Pinterest Blog",
+        tools: "ChatGPT (Writing), Tailwind",
+        platform: "WordPress + Pinterest",
+        action: "Drive massive traffic to a blog using AI visuals and pins.",
+        steps: [
+          "Pick a highly visual niche (e.g., 'Small Apartment Decor', 'Wedding Flower Arrangements').",
+          "Use ChatGPT to write 10 'Listicle' articles: 'Top 10 Hacks for Tiny Kitchens'.",
+          "Post them to a simple WordPress site. Add Amazon Affiliate links to products mentioned.",
+          "Create vertical pins in Canva (1000x1500px) showing the decor.",
+          "Upload pins to Pinterest. Link them to your blog post. Pinterest traffic is free and high-intent."
+        ]
+      },
+      {
+        idea: "Adult Coloring Books",
+        tools: "Midjourney (Line Art)",
+        platform: "Amazon KDP",
+        action: "Create stress-relief coloring books for adults.",
+        steps: [
+          "Prompt Midjourney: 'coloring book page, intricate mandala, black and white lines, white background, no shading --ar 2:3'.",
+          "Generate 50 unique pages based on a theme (e.g., 'Space Cats' or 'Forest Magic').",
+          "Use 'Vector Magic' or Adobe to sharpen the lines.",
+          "Compile images into a single PDF in Canva (standard book size).",
+          "Create a colorful, eye-catching cover. Upload to Amazon KDP."
+        ]
+      },
+      {
+        idea: "AI Voiceover Services",
+        tools: "ElevenLabs (Cloning)",
+        platform: "ACX / Fiverr",
+        action: " narrate audiobooks or YouTube videos using a cloned voice.",
+        steps: [
+          "Record yourself reading for 1 minute to train a custom 'Professional' voice on ElevenLabs.",
+          "Create a Fiverr gig: 'I will record a professional American male/female voiceover'.",
+          "When a client sends a script, paste it into ElevenLabs using your cloned voice.",
+          "Listen to the output. Re-generate any awkward sentences.",
+          "Deliver the high-quality WAV file. This takes 5 minutes of work for $20-$50."
+        ]
+      },
+      {
+        idea: "Digital Planner Seller",
+        tools: "Midjourney (Assets), Canva",
+        platform: "Etsy",
+        action: "Sell downloadable iPad planners for GoodNotes.",
+        steps: [
+          "Go to Canva and search for 'Digital Planner Templates'.",
+          "Use Midjourney to generate unique assets: 'watercolor floral border transparent background' or 'gold washi tape texture'.",
+          "Decorate the Canva template with your unique assets.",
+          "Hyperlink the tabs in Canva so users can click 'May' and jump to the May page.",
+          "Export as 'PDF Standard'. List on Etsy as a 'Digital Download' (Passive income)."
+        ]
+      },
+      {
+        idea: "Startup Logo Packs",
+        tools: "Looka / Midjourney",
+        platform: "Fiverr / Upwork",
+        action: "Provide branding packages for new small businesses.",
+        steps: [
+          "Ask client for business name, industry, and color preference.",
+          "Prompt Midjourney: 'minimalist vector logo for a coffee shop, flat design, white background, orange and black'.",
+          "Generate 4 variations.",
+          "Use 'Vectorizer.ai' to turn the best JPG into a Vector (SVG) file. This is crucial for professional quality.",
+          "Deliver the SVG and PNG files to the client."
+        ]
+      },
+      {
+        idea: "Code Debugging Mentor",
+        tools: "ChatGPT Plus / Claude",
+        platform: "Codementor / Discord",
+        action: "Help beginner programmers fix errors instantly.",
+        steps: [
+          "Join coding Discord servers or sign up as a junior mentor on Codementor.",
+          "When a user posts a bug or error message, copy it.",
+          "Paste into GPT-4: 'Analyze this code snippet. Find the bug and explain the fix in simple terms.'",
+          "Verify the solution looks correct.",
+          "Paste the explanation and fixed code back to the user. Charge for 15-minute 'help sessions'."
+        ]
+      },
+      {
+        idea: "Personalized AI Songs",
+        tools: "Suno AI / Udio",
+        platform: "Fiverr",
+        action: "Sell custom birthday, anniversary, or roast songs.",
+        steps: [
+          "Gig: 'I will write a custom song for your loved one in any genre'.",
+          "Ask for details: Name (e.g., Sarah), Occasion (30th Birthday), Inside Jokes (Loves pizza, hates cats).",
+          "Go to Suno.ai. Select 'Custom Mode'. Input the lyrics/details.",
+          "Generate a full 2-minute song in their favorite genre (Country, Rap, Opera).",
+          "Send the MP3 file. The quality shocks people every time."
+        ]
+      },
+      {
+        idea: "Interior Design Renders",
+        tools: "InteriorAI / ReImagineHome",
+        platform: "Instagram / Fiverr",
+        action: "Visualize room makeovers for real estate agents or homeowners.",
+        steps: [
+          "Gig: 'I will virtually stage your empty real estate listing'.",
+          "Ask client for a photo of their empty or messy room.",
+          "Upload it to InteriorAI.com.",
+          "Select styles like 'Modern', 'Scandanavian', or 'Industrial'.",
+          "The AI replaces the mess with beautiful furniture. Send the portfolio of 5 renders."
+        ]
+      },
+      {
+        idea: "Podcast Summarizer",
+        tools: "Castmagic / Otter.ai",
+        platform: "Upwork / Cold Email",
+        action: "Turn long podcasts into LinkedIn posts and Tweets for creators.",
+        steps: [
+          "Find podcasters who post audio but have weak social media presence.",
+          "Take their MP3 file and upload it to Castmagic.",
+          "The AI will auto-generate: A summary, 10 Tweetable quotes, and a LinkedIn post.",
+          "Email the creator: 'I turned your latest episode into a week's worth of content. Here it is for free. Want me to do this every week?'",
+          "Charge a monthly retainer."
+        ]
+      },
+      {
+        idea: "YouTube Clickbait Thumbnails",
+        tools: "Midjourney (Expressions), Photoshop",
+        platform: "YouTube Jobs / Twitter",
+        action: "Create high-CTR thumbnails using exaggerated AI faces.",
+        steps: [
+          "YouTubers always need shocked faces. Prompt MJ: 'man looking shocked, holding hands to face, open mouth, blue hoodie, 3d pixar style, high contrast'.",
+          "Cut out the face using Adobe Express background remover.",
+          "Place it on a bright, blurry background in Canva.",
+          "Add huge text (e.g., 'I LOST EVERYTHING') and a red arrow.",
+          "Sell packs of '10 Clickable Thumbnail Assets' to streamers."
+        ]
+      },
+      {
+        idea: "Guided Meditation Channel",
+        tools: "ChatGPT (Script), ElevenLabs",
+        platform: "Insight Timer / YouTube",
+        action: "Create a library of relaxation tracks.",
+        steps: [
+          "Ask ChatGPT: 'Write a 15-minute guided meditation script for anxiety relief, focusing on breath work.'",
+          "Copy script to ElevenLabs. Select a voice like 'Bella' (soft, calm, whisper style).",
+          "Download royalty-free ambient music from Pixabay.",
+          "Layer the voice and music in Audacity (lower the music volume).",
+          "Upload to Insight Timer (they pay per play) or YouTube."
+        ]
+      },
+      {
+        idea: "Excel/Sheets Wizard",
+        tools: "ChatGPT",
+        platform: "Fiverr",
+        action: "Fix broken spreadsheets for businesses.",
+        steps: [
+          "Gig: 'I will fix your broken Excel formulas or create custom dashboards'.",
+          "When a client sends a confusing sheet, copy the cell data.",
+          "Paste to ChatGPT: 'I need an Excel formula that calculates X based on Y in these columns. Also, how do I conditional format this?'",
+          "Copy the exact formula provided and send it back to the client.",
+          "For complex tasks, ask GPT to write a VBA macro."
+        ]
+      },
+      {
+        idea: "Custom Meal Plans",
+        tools: "ChatGPT",
+        platform: "Etsy / Instagram",
+        action: "Generate highly specific diet plans for fitness niches.",
+        steps: [
+          "Create a Google Form asking: Current weight, Goal weight, Dietary restrictions (e.g., Vegan, Gluten-Free).",
+          "Input data into ChatGPT: 'Create a 28-day Vegan meal plan for a 150lb woman wanting to lose 5lbs. 1600 calories/day. Include shopping list.'",
+          "Take the text output and put it into a beautiful 'Meal Planner' template in Canva.",
+          "Export as PDF.",
+          "Charge $29 for a 'Personalized 4-Week Transformation Plan'."
+        ]
+      },
+      {
+        idea: "Wedding Vow Consultant",
+        tools: "ChatGPT",
+        platform: "The Knot / Fiverr",
+        action: "Save stressed couples by writing their vows.",
+        steps: [
+          "Ask client for: Partner's name, how they met, 3 favorite memories, and tone (funny vs. serious).",
+          "Prompt GPT: 'Write heartfelt wedding vows incorporating these memories. Make the audience laugh once, then cry.'",
+          "Generate 3 variations.",
+          "Paste the best one onto a 'Vow Card' design in Canva.",
+          "Deliver the PDF for them to print and hold at the altar."
+        ]
+      },
+      {
+        idea: "Game Asset Packs",
+        tools: "Midjourney / Stable Diffusion",
+        platform: "Itch.io / ArtStation",
+        action: "Sell icons, backgrounds, and textures to indie game devs.",
+        steps: [
+          "Choose a theme: 'Cyberpunk Inventory Icons'.",
+          "Generate 100 icons in Midjourney: 'sci-fi potion bottle, flat vector, black background'.",
+          "Remove backgrounds in bulk.",
+          "Package them into a ZIP file.",
+          "Upload to Itch.io as '100+ Cyberpunk Icons - Royalty Free'. Price at $5-$10."
+        ]
+      },
+      {
+        idea: "Niche Newsletter",
+        tools: "GPT-4 / MailerLite",
+        platform: "Substack / Beehiiv",
+        action: "Curate news for a specific industry (e.g., 'AI for Lawyers').",
+        steps: [
+          "Pick a high-value niche. 'AI for Real Estate Agents' is huge right now.",
+          "Once a week, find 5 news articles about that topic.",
+          "Paste links into GPT-4: 'Summarize these 5 articles into a witty newsletter intro. Explain why a realtor should care.'",
+          "Send via Beehiiv.",
+          "Once you have subscribers, sell sponsorship slots to software companies."
+        ]
+      },
+      {
+        idea: "D&D Map Maker",
+        tools: "Midjourney",
+        platform: "DriveThruRPG / Patreon",
+        action: "Create immersive maps for Dungeon Masters.",
+        steps: [
+          "Prompt MJ: 'fantasy world map, parchment texture, lord of the rings style, mountains, rivers, top down view --ar 3:2'.",
+          "Upscale to 4k resolution.",
+          "Create variants (snow version, night version).",
+          "Sell packs of '20 Unexplored Worlds' on DriveThruRPG.",
+          "Set up a Patreon where subscribers get 5 new maps a month."
+        ]
+      },
+      {
+        idea: "User Testing Scenarios",
+        tools: "ChatGPT",
+        platform: "UserTesting / Upwork",
+        action: "Write test scripts for UX designers.",
+        steps: [
+          "UX Designers need 'scripts' to give to testers (e.g., 'Try to buy a red shoe').",
+          "Offer a service to write these.",
+          "Prompt: 'Write a usability test script for a travel booking app. Include 5 specific tasks for the user to attempt, and 3 post-test questions.'",
+          "Format as a professional PDF checklist.",
+          "Deliver to the designer to save them hours of planning."
+        ]
+      },
+      {
+        idea: "Luxury Real Estate Copy",
+        tools: "ChatGPT",
+        platform: "Cold Email to Realtors",
+        action: "Turn boring house specs into emotional sales copy.",
+        steps: [
+          "Go to Zillow, find listings with bad descriptions.",
+          "Take the rough notes: '3 bed, 2 bath, new pool'.",
+          "Prompt: 'Write a luxurious, emotional real estate listing description for a home with... Focus on the lifestyle.'",
+          "Email the realtor: 'I rewrote your listing for 123 Main St to help it sell faster. Here it is for free. If you like it, I can do the rest of your listings for $50/mo'."
+        ]
+      },
+      {
+        idea: "Niche T-Shirt Empire",
+        tools: "ChatGPT (Ideation), Canva",
+        platform: "Amazon Merch / Redbubble",
+        action: "Scale text-based designs for specific hobbies.",
+        steps: [
+          "Pick a super specific niche: 'Dads who play Bass Guitar'.",
+          "Ask GPT: 'Give me 20 funny, punny t-shirt slogans for dads who play bass guitar'.",
+          "Go to Canva. Create a simple text-only design with a rugged font.",
+          "Upload to Amazon Merch on Demand.",
+          "Repeat for 50 different niches. It's a numbers game."
+        ]
+      },
+      {
+        idea: "Faceless Recipe Blog",
+        tools: "ChatGPT (Recipes), Midjourney (Food Photos)",
+        platform: "WordPress",
+        action: "Run a food blog without cooking.",
+        steps: [
+          "Prompt GPT: 'Give me a unique, high-SEO recipe for Vegan Pumpkin Brownies'.",
+          "Prompt Midjourney: 'vegan pumpkin brownies on a rustic wooden table, food photography, 8k, delicious, steam rising'.",
+          "Post the recipe and the AI image to a blog.",
+          "Use the image to create a Pinterest Pin.",
+          "Monetize the blog traffic with ads (Mediavine) once you hit 50k sessions."
+        ]
+      },
+      {
+        idea: "Language Flashcards",
+        tools: "ChatGPT (Vocab), Canva",
+        platform: "TeachersPayTeachers",
+        action: "Create educational assets for teachers and parents.",
+        steps: [
+          "Ask GPT for 'Top 50 Spanish words for preschoolers involving animals'.",
+          "Generate a cute, simple vector image for each animal in Midjourney.",
+          "Go to Canva. Put the Image on one side and the Word on the other.",
+          "Create a 'Printable PDF' layout.",
+          "Upload to TeachersPayTeachers for $3.00. Teachers buy these instantly."
+        ]
+      }
+    ];
+
+    // ✅ If your array is not exactly 30 yet, this prevents crashes.
+    // (You can add the missing items anytime. Everything else will still work.)
+    function unlockSecretHustle() {
+      if (!secretHustles.length) return;
+
+      currentHustle = secretHustles[Math.floor(Math.random() * secretHustles.length)];
+
+      document.getElementById('hustle-idea').textContent = currentHustle.idea;
+      document.getElementById('hustle-tools').textContent = `${currentHustle.tools} → ${currentHustle.platform}`;
+
+      document.getElementById('hustle-modal').style.display = 'flex';
+    }
+
+    function openDeepDive() {
+      closeModal('hustle-modal');
+
+      document.getElementById('dossier-id').textContent = String(Math.floor(Math.random() * 900) + 100).padStart(3, '0');
+      document.getElementById('dossier-title').textContent = "OPERATION: " + String(currentHustle.idea || "UNKNOWN").toUpperCase();
+
+      const stepsContainer = document.getElementById('dossier-steps');
+      stepsContainer.innerHTML = "";
+
+      (currentHustle.steps || []).forEach((step, index) => {
+        const stepRow = document.createElement('div');
+        stepRow.className = 'checklist-item';
+        stepRow.innerHTML = `
+          <span class="checklist-number">${String(index + 1).padStart(2, '0')} //</span>
+          <span>${step}</span>
+        `;
+        stepsContainer.appendChild(stepRow);
+      });
+
+      document.getElementById('deep-dive-modal').style.display = 'flex';
+    }
+
+    function copyDossier(evt) {
+      if (!currentHustle) return;
+
+      let text = `CONFIDENTIAL HUSTLE: ${currentHustle.idea}\n\n`;
+      text += `TOOLS: ${currentHustle.tools}\n`;
+      text += `PLATFORM: ${currentHustle.platform}\n\n`;
+      text += `EXECUTION STEPS:\n`;
+      (currentHustle.steps || []).forEach((step, i) => {
+        text += `${i + 1}. ${step}\n`;
+      });
+      text += `\nUnlocked via Couch Funds - ${SHARE_URL}`;
+
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = evt?.target;
+        if (!btn) return;
+        const originalText = btn.textContent;
+        btn.textContent = "✅ COPIED TO CLIPBOARD";
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = originalText;
+          btn.classList.remove('copied');
+        }, 2000);
+      }).catch(() => {
+        alert('Failed to copy. Please try again.');
+      });
+    }
+
+    // ============================================
+    // TIC TAC TOE ENGINE
+    // ============================================
+    let board = ["", "", "", "", "", "", "", "", ""];
+    const player = "X";
+    const ai = "O";
+    let gameActive = true;
+    const tttBoard = document.getElementById("ttt-board");
+    const tttStatus = document.getElementById("ttt-status");
+
+    function initTTT() {
+      tttBoard.innerHTML = "";
+      board.forEach((cell, i) => {
+        const div = document.createElement("div");
+        div.className = "ttt-cell";
+        div.dataset.index = i;
+        div.textContent = cell;
+        if (cell) div.classList.add(cell.toLowerCase());
+        if (!checkWinner(board) && gameActive) {
+          div.onclick = () => handleMove(i);
         }
+        tttBoard.appendChild(div);
+      });
+    }
 
-        // --- CORE TYCOON ENGINE ---
-        const moneyFormat = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 });
-        const balanceEl = document.getElementById('balance');
-        const incomeEl = document.getElementById('income-display');
-        const progressFill = document.getElementById('progress-fill');
+    function handleMove(i) {
+      if (board[i] || checkWinner(board) || !gameActive) return;
 
-        function loadGame() {
-            const saved = localStorage.getItem('couchPotatoTycoon_V3');
-            if (saved) {
-                const loadedState = JSON.parse(saved);
-                gameState.balance = loadedState.balance || 0;
-                gameState.hasWon = loadedState.hasWon || false;
-                
-                // Calculate Offline Earnings
-                if (loadedState.lastSaveTime) {
-                    const now = Date.now();
-                    const secondsGone = (now - loadedState.lastSaveTime) / 1000;
-                    
-                    let tempIncome = 0;
-                    loadedState.upgrades.forEach(u => tempIncome += u.income * u.count);
-                    
-                    if (tempIncome > 0 && secondsGone > 10) {
-                        const earned = secondsGone * tempIncome;
-                        gameState.balance += earned;
-                        showOfflineEarnings(earned);
-                    }
-                }
+      board[i] = player;
+      initTTT();
 
-                // Restore Upgrades
-                gameState.upgrades.forEach((u, i) => {
-                    if (loadedState.upgrades[i]) {
-                        u.count = loadedState.upgrades[i].count;
-                        u.cost = Math.floor(u.cost * Math.pow(1.15, u.count));
-                    }
-                });
+      const winner = checkWinner(board);
+      if (winner || !board.includes("")) {
+        updateStatus();
+        return;
+      }
+
+      tttStatus.textContent = "Market is thinking...";
+      setTimeout(aiMove, 600);
+    }
+
+    function aiMove() {
+      let move;
+
+      if (Math.random() < 0.30) {
+        let available = board.map((v, i) => v === "" ? i : null).filter(v => v !== null);
+        move = available[Math.floor(Math.random() * available.length)];
+      } else {
+        move = getBestMove();
+      }
+
+      board[move] = ai;
+      initTTT();
+      updateStatus();
+    }
+
+    function updateStatus() {
+      const win = checkWinner(board);
+      if (win === "X") {
+        tttStatus.textContent = "🏆 You beat the Market!";
+        gameActive = false;
+        gameState.hasBeatenAI = true;
+        checkAchievements();
+        markLeaderboardDirty();
+        setTimeout(unlockSecretHustle, 800);
+      }
+      else if (win === "O") {
+        tttStatus.textContent = "📉 Market Volatility won.";
+        gameActive = false;
+      }
+      else if (!board.includes("")) {
+        tttStatus.textContent = "🤝 It's a Market Draw.";
+        gameActive = false;
+      }
+      else {
+        tttStatus.textContent = "Your move, Investor.";
+      }
+    }
+
+    function checkWinner(b) {
+      const lines = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+      for (let l of lines) {
+        if (b[l[0]] && b[l[0]] === b[l[1]] && b[l[0]] === b[l[2]]) return b[l[0]];
+      }
+      return null;
+    }
+
+    function getBestMove() {
+      let bestScore = -Infinity;
+      let move;
+      for (let i = 0; i < 9; i++) {
+        if (board[i] === "") {
+          board[i] = ai;
+          let score = minimax(board, 0, false);
+          board[i] = "";
+          if (score > bestScore) {
+            bestScore = score;
+            move = i;
+          }
+        }
+      }
+      return move;
+    }
+
+    function minimax(b, depth, isMaximizing) {
+      let result = checkWinner(b);
+      if (result === ai) return 10 - depth;
+      if (result === player) return depth - 10;
+      if (!b.includes("")) return 0;
+
+      if (isMaximizing) {
+        let bestScore = -Infinity;
+        for (let i = 0; i < 9; i++) {
+          if (b[i] === "") {
+            b[i] = ai;
+            bestScore = Math.max(bestScore, minimax(b, depth + 1, false));
+            b[i] = "";
+          }
+        }
+        return bestScore;
+      } else {
+        let bestScore = Infinity;
+        for (let i = 0; i < 9; i++) {
+          if (b[i] === "") {
+            b[i] = player;
+            bestScore = Math.min(bestScore, minimax(b, depth + 1, true));
+            b[i] = "";
+          }
+        }
+        return bestScore;
+      }
+    }
+
+    function resetTTT() {
+      board = ["", "", "", "", "", "", "", "", ""];
+      gameActive = true;
+      tttStatus.textContent = "Your move, Investor.";
+      initTTT();
+    }
+
+    // ============================================
+    // TYCOON GAME ENGINE
+    // ============================================
+    const GOAL_AMOUNT = 1000000;
+    let gameLoopInterval = null;
+
+    let gameState = {
+      balance: 0.00,
+      income: 0.00,
+      clickValue: 1.00,
+      hasWon: false,
+      lastSaveTime: Date.now(),
+      totalClicks: 0,
+      totalUpgrades: 0,
+      hasBeatenAI: false,
+      unlockedAchievements: [],
+      streak: 0,
+      lastVisitDate: '',
+      upgrades: [
+        { id: 0, name: "Loose Change", cost: 15, income: 0.5, count: 0, icon: "🪙", baseCost: 15 },
+        { id: 1, name: "Piggy Bank", cost: 100, income: 4, count: 0, icon: "🐷", baseCost: 100 },
+        { id: 2, name: "Lemonade Stand", cost: 1100, income: 12, count: 0, icon: "🍋", baseCost: 1100 },
+        { id: 3, name: "Vending Machine", cost: 12000, income: 48, count: 0, icon: "🍫", baseCost: 12000 },
+        { id: 4, name: "ATM", cost: 130000, income: 240, count: 0, icon: "🏧", baseCost: 130000 },
+        { id: 5, name: "Bank Branch", cost: 1400000, income: 960, count: 0, icon: "🏦", baseCost: 1400000 }
+      ]
+    };
+
+    const tips = [
+      "The best time to plant a money tree was 20 years ago. The second best time is today.",
+      "Compound interest is the eighth wonder of the world. He who understands it, earns it.",
+      "Wealth isn't about having a lot of money; it's about having a lot of options.",
+      "Don't save what is left after spending; spend what is left after saving.",
+      "A budget is telling your money where to go instead of wondering where it went.",
+      "Rich people stay rich by living like they're broke. Broke people stay broke by living like they're rich.",
+      "Passive income is the only true financial freedom.",
+      "Invest in yourself. Your knowledge is the engine of your wealth.",
+      "Automate your savings. Willpower is a limited resource.",
+      "The goal is not to look rich, the goal is to be rich.",
+      "Do not wait to buy real estate. Buy real estate and wait.",
+      "Your network is your net worth.",
+      "Time in the market beats timing the market.",
+      "Assets put money in your pocket. Liabilities take money out of your pocket.",
+      "Don't trade your time for money forever. Trade your money for time.",
+      "Price is what you pay. Value is what you get.",
+      "A penny saved is a penny earned.",
+      "The rich invest in time, the poor invest in money.",
+      "If you can't buy it twice, you can't afford it.",
+      "Money is a terrible master but an excellent servant.",
+      "Track your net worth, not just your salary.",
+      "An investment in knowledge pays the best interest.",
+      "Live below your means, but expand your means."
+    ];
+
+    function getTipOfTheDay() {
+      const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+      return tips[dayOfYear % tips.length];
+    }
+
+    function renderTip(text) {
+      const el = document.getElementById('tip-text');
+      el.classList.remove('fade-in');
+      void el.offsetWidth;
+      el.textContent = text;
+      el.classList.add('fade-in');
+    }
+
+    function showRandomTip() {
+      renderTip(tips[Math.floor(Math.random() * tips.length)]);
+    }
+
+    const moneyFormat = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 });
+    const balanceEl = document.getElementById('balance');
+    const incomeEl = document.getElementById('income-display');
+    const progressFill = document.getElementById('progress-fill');
+    const progressTextEl = document.getElementById('progress-text');
+    const progressPercentEl = document.getElementById('progress-percent');
+
+    function loadGame() {
+      const saved = localStorage.getItem('couchPotatoTycoon_V4');
+      if (saved) {
+        try {
+          const loadedState = JSON.parse(saved);
+          Object.assign(gameState, loadedState);
+
+          if (loadedState.lastSaveTime) {
+            const now = Date.now();
+            const secondsGone = Math.min((now - loadedState.lastSaveTime) / 1000, 86400);
+
+            let tempIncome = 0;
+            if (loadedState.upgrades) {
+              loadedState.upgrades.forEach(u => tempIncome += u.income * u.count);
             }
-            recalcIncome();
-        }
 
-        function saveGame() {
-            if (!gameLoopInterval) return; // Don't save if resetting
-            gameState.lastSaveTime = Date.now();
-            localStorage.setItem('couchPotatoTycoon_V3', JSON.stringify(gameState));
-        }
-
-        function hardReset() {
-            if(confirm("⚠️ RESET WARNING ⚠️\n\nAre you sure you want to delete your save file and start over? This cannot be undone.")) {
-                if (gameLoopInterval) {
-                    clearInterval(gameLoopInterval);
-                    gameLoopInterval = null;
-                }
-                localStorage.removeItem('couchPotatoTycoon_V3');
-                location.reload();
+            if (tempIncome > 0 && secondsGone > 10) {
+              const earned = secondsGone * tempIncome;
+              gameState.balance += earned;
+              showOfflineEarnings(earned);
             }
-        }
+          }
 
-        function prestigeReset() {
-             if (gameLoopInterval) {
-                clearInterval(gameLoopInterval);
-                gameLoopInterval = null;
-            }
-            localStorage.removeItem('couchPotatoTycoon_V3');
-            location.reload();
-        }
-
-        function recalcIncome() {
-            let totalIncome = 0;
-            gameState.upgrades.forEach(u => totalIncome += u.income * u.count);
-            gameState.income = totalIncome;
-            incomeEl.textContent = `+${moneyFormat.format(totalIncome)} / sec`;
-        }
-
-        // --- UI RENDERER ---
-        function initStore() {
-            const grid = document.getElementById('store-grid');
-            grid.innerHTML = '';
-            gameState.upgrades.forEach((u, index) => {
-                const card = document.createElement('div');
-                card.id = `upgrade-card-${index}`;
-                card.className = 'upgrade-card disabled'; 
-                card.innerHTML = `
-                    <div class="upgrade-count" id="count-${index}">${u.count}</div>
-                    <span class="upgrade-name">${u.icon} ${u.name}</span>
-                    <span class="upgrade-cost" id="cost-${index}">${moneyFormat.format(u.cost)}</span>
-                    <span class="upgrade-rate">+${u.income}/s</span>
-                `;
-                card.onclick = () => buyUpgrade(index);
-                grid.appendChild(card);
+          if (loadedState.upgrades) {
+            gameState.upgrades.forEach((u, i) => {
+              if (loadedState.upgrades[i]) {
+                u.count = loadedState.upgrades[i].count || 0;
+                u.cost = Math.floor(u.baseCost * Math.pow(1.15, u.count));
+              }
             });
+          }
+        } catch (e) {
+          console.error('Error loading save:', e);
+        }
+      }
+      recalcIncome();
+      updateStreak();
+      renderAchievements();
+      markLeaderboardDirty();
+    }
+
+    function saveGame() {
+      if (!gameLoopInterval) return;
+      gameState.lastSaveTime = Date.now();
+      try {
+        localStorage.setItem('couchPotatoTycoon_V4', JSON.stringify(gameState));
+      } catch (e) {
+        console.error('Error saving:', e);
+      }
+    }
+
+    function hardReset() {
+      if (confirm("⚠️ RESET WARNING ⚠️\n\nAre you sure you want to delete your save file and start over? This cannot be undone.")) {
+        if (gameLoopInterval) {
+          clearInterval(gameLoopInterval);
+          gameLoopInterval = null;
+        }
+        localStorage.removeItem('couchPotatoTycoon_V4');
+        localStorage.removeItem('cf_player_id');
+        localStorage.removeItem('cf_username');
+        location.reload();
+      }
+    }
+
+    function prestigeReset() {
+      if (gameLoopInterval) {
+        clearInterval(gameLoopInterval);
+        gameLoopInterval = null;
+      }
+      localStorage.removeItem('couchPotatoTycoon_V4');
+      location.reload();
+    }
+
+    function recalcIncome() {
+      let totalIncome = 0;
+      gameState.upgrades.forEach(u => totalIncome += u.income * u.count);
+      gameState.income = totalIncome;
+      incomeEl.textContent = `+${moneyFormat.format(totalIncome)} / sec`;
+    }
+
+    function initStore() {
+      const grid = document.getElementById('store-grid');
+      grid.innerHTML = '';
+      gameState.upgrades.forEach((u, index) => {
+        const card = document.createElement('div');
+        card.id = `upgrade-card-${index}`;
+        card.className = 'upgrade-card disabled';
+        card.innerHTML = `
+          <div class="upgrade-count" id="count-${index}">${u.count}</div>
+          <span class="upgrade-name">${u.icon} ${u.name}</span>
+          <span class="upgrade-cost" id="cost-${index}">${moneyFormat.format(u.cost)}</span>
+          <span class="upgrade-rate">+${u.income}/s</span>
+        `;
+        card.onclick = () => buyUpgrade(index);
+        grid.appendChild(card);
+      });
+    }
+
+    function updateUI() {
+      balanceEl.textContent = moneyFormat.format(gameState.balance);
+
+      // ✅ FIX: progress is now visible even for tiny balances
+      let percentage = Math.min((gameState.balance / GOAL_AMOUNT) * 100, 100);
+      if (gameState.balance > 0) percentage = Math.max(percentage, 0.3);
+      progressFill.style.width = `${percentage}%`;
+
+      // ✅ ADDED: show numeric progress
+      progressTextEl.textContent = `${moneyFormat.format(gameState.balance)} / ${moneyFormat.format(GOAL_AMOUNT)}`;
+      progressPercentEl.innerHTML = `<b>${Math.min((gameState.balance / GOAL_AMOUNT) * 100, 100).toFixed(1)}%</b>`;
+
+      if (gameState.balance >= GOAL_AMOUNT && !gameState.hasWon) {
+        triggerWin();
+      }
+
+      gameState.upgrades.forEach((u, index) => {
+        const card = document.getElementById(`upgrade-card-${index}`);
+        const countEl = document.getElementById(`count-${index}`);
+        const costEl = document.getElementById(`cost-${index}`);
+
+        if (card) {
+          if (gameState.balance >= u.cost) {
+            card.classList.remove('disabled');
+          } else {
+            card.classList.add('disabled');
+          }
         }
 
-        function updateUI() {
-            balanceEl.textContent = moneyFormat.format(gameState.balance);
-            
-            // Progress Bar
-            let percentage = (gameState.balance / GOAL_AMOUNT) * 100;
-            if (percentage > 100) percentage = 100;
-            progressFill.style.width = `${percentage}%`;
+        if (countEl) countEl.textContent = u.count;
+        if (costEl) costEl.textContent = moneyFormat.format(u.cost);
+      });
 
-            // Win Condition
-            if (gameState.balance >= GOAL_AMOUNT && !gameState.hasWon) {
-                triggerWin();
-            }
+      checkAchievements();
+      markLeaderboardDirty();
+    }
 
-            // Store Buttons
-            gameState.upgrades.forEach((u, index) => {
-                const card = document.getElementById(`upgrade-card-${index}`);
-                const countEl = document.getElementById(`count-${index}`);
-                const costEl = document.getElementById(`cost-${index}`);
+    function buyUpgrade(index) {
+      const u = gameState.upgrades[index];
+      if (gameState.balance >= u.cost) {
+        gameState.balance -= u.cost;
+        u.count++;
+        u.cost = Math.floor(u.baseCost * Math.pow(1.15, u.count));
+        gameState.totalUpgrades++;
+        recalcIncome();
+        updateUI();
+        saveGame();
+      }
+    }
 
-                if (gameState.balance >= u.cost) { card.classList.remove('disabled'); } 
-                else { card.classList.add('disabled'); }
+    function spawnFloatingText(amount, x, y) {
+      const el = document.createElement('div');
+      el.className = 'floating-text';
+      el.textContent = `+${moneyFormat.format(amount)}`;
+      el.style.left = `${x}px`;
+      el.style.top = `${y}px`;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 800);
+    }
 
-                countEl.textContent = u.count;
-                costEl.textContent = moneyFormat.format(u.cost);
-            });
+    document.getElementById('click-btn').addEventListener('click', (e) => {
+      gameState.balance += gameState.clickValue;
+      gameState.totalClicks++;
+      updateUI();
+
+      const rect = e.target.getBoundingClientRect();
+      const x = e.clientX || (rect.left + rect.width / 2);
+      const y = e.clientY || (rect.top + rect.height / 2);
+      spawnFloatingText(gameState.clickValue, x, y);
+      saveGame();
+    });
+
+    function showOfflineEarnings(amount) {
+      document.getElementById('offline-amount').textContent = `+${moneyFormat.format(amount)}`;
+      document.getElementById('offline-modal').style.display = 'flex';
+    }
+
+    function triggerWin() {
+      gameState.hasWon = true;
+      document.getElementById('win-modal').style.display = 'flex';
+      checkAchievements();
+      markLeaderboardDirty();
+      saveGame();
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).style.display = 'none';
+    }
+
+    // ============================================
+    // INIT
+    // ============================================
+    document.addEventListener('DOMContentLoaded', async () => {
+      renderTip(getTipOfTheDay());
+      initTTT();
+      initStore();
+      loadGame();
+      updateUI();
+
+      gameLoopInterval = setInterval(() => {
+        if (gameState.income > 0) {
+          gameState.balance += gameState.income / 10;
+          updateUI();
         }
+      }, 100);
 
-        function buyUpgrade(index) {
-            const u = gameState.upgrades[index];
-            if (gameState.balance >= u.cost) {
-                gameState.balance -= u.cost;
-                u.count++;
-                u.cost = Math.floor(u.cost * 1.15);
-                recalcIncome();
-                updateUI();
-                saveGame();
-            }
-        }
+      setInterval(saveGame, 5000);
 
-        // --- INTERACTION ---
-        function spawnFloatingText(amount, x, y) {
-            const el = document.createElement('div');
-            el.className = 'floating-text';
-            el.textContent = `+${moneyFormat.format(amount)}`;
-            el.style.left = `${x}px`;
-            el.style.top = `${y}px`;
-            document.body.appendChild(el);
-            setTimeout(() => el.remove(), 800);
-        }
+      const firebaseOk = await safeWaitForFirebase(6000);
+      if (firebaseOk) {
+        startLiveLeaderboard();
+        await syncScoreToFirestore(true);
+        setInterval(() => syncScoreToFirestore(false), 2500);
+      } else {
+        document.getElementById("player-rank").textContent = "Leaderboard not connected (Firebase failed to load).";
+      }
+    });
 
-        document.getElementById('click-btn').addEventListener('mousedown', (e) => {
-            gameState.balance += gameState.clickValue;
-            updateUI();
-            
-            const rect = e.target.getBoundingClientRect();
-            const x = e.clientX || (rect.left + rect.width / 2);
-            const y = e.clientY || (rect.top + rect.height / 2);
-            spawnFloatingText(gameState.clickValue, x, y);
-            saveGame();
-        });
+    window.addEventListener('beforeunload', async () => {
+      saveGame();
+      try { await syncScoreToFirestore(true); } catch {}
+    });
+  </script>
 
-        // --- MODALS ---
-        function showOfflineEarnings(amount) {
-            document.getElementById('offline-amount').textContent = `+${moneyFormat.format(amount)}`;
-            document.getElementById('offline-modal').style.display = 'flex';
-        }
-
-        function triggerWin() {
-            gameState.hasWon = true;
-            document.getElementById('win-modal').style.display = 'flex';
-            saveGame();
-        }
-
-        function closeModal(id) {
-            document.getElementById(id).style.display = 'none';
-        }
-
-        // --- INITIALIZATION ---
-        document.addEventListener('DOMContentLoaded', () => {
-            // Load Wisdom
-            renderTip(getTipOfTheDay());
-            
-            // Load TTT
-            initTTT();
-
-            // Load Tycoon
-            initStore();
-            loadGame();
-            updateUI();
-
-            // Start Game Loop
-            gameLoopInterval = setInterval(() => {
-                if (gameState.income > 0) {
-                    gameState.balance += gameState.income / 10;
-                    updateUI();
-                    saveGame();
-                }
-            }, 100);
-        });
-
-    </script>
 </body>
 </html>
