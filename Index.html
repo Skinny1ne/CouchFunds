@@ -2235,9 +2235,8 @@
           clearInterval(gameLoopInterval);
           gameLoopInterval = null;
         }
+        // Keep username + player id, only reset game stats
         localStorage.removeItem('couchPotatoTycoon_V4');
-        localStorage.removeItem('cf_player_id');
-        localStorage.removeItem('cf_username');
         localStorage.removeItem('cf_referral_code');
         localStorage.removeItem('cf_referred_by');
         localStorage.removeItem('cf_my_referrals');
