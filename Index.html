@@ -11,9 +11,16 @@
 
   <meta property="og:title" content="Couch Funds | Build Wealth. Stay Horizontal.">
   <meta property="og:description" content="I just unlocked secret side hustles on Couch Funds! 🛋️💰 Beat the AI and learn how to make money online.">
-  <meta property="og:image" content="https://via.placeholder.com/1200x630/022c22/fbbf24?text=Couch+Funds">
+  <meta property="og:image" content="https://placehold.co/1200x630/022c22/fbbf24/png?text=Couch+Funds&font=raleway">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/png">
   <meta property="og:url" content="https://shungtai.com">
   <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Couch Funds | Build Wealth. Stay Horizontal.">
+  <meta name="twitter:description" content="Beat the AI and unlock secret side hustles. The anti-grind finance community.">
+  <meta name="twitter:image" content="https://placehold.co/1200x630/022c22/fbbf24/png?text=Couch+Funds&font=raleway">
 
   <link rel="canonical" href="https://shungtai.com">
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;800&family=Space+Grotesk:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
@@ -429,6 +436,35 @@
       justify-content: center;
       margin-bottom: 1.5rem;
       flex-wrap: wrap;
+    }
+
+    .leaderboard-load-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    .leaderboard-load-btn {
+      background: transparent;
+      border: 1px solid var(--accent-green);
+      color: var(--accent-green);
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    .leaderboard-load-btn:hover:not(:disabled) {
+      background: rgba(52, 211, 153, 0.12);
+      transform: translateY(-1px);
+    }
+
+    .leaderboard-load-btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
     }
 
     .leaderboard-tab {
@@ -1125,13 +1161,19 @@
         </button>
       </div>
 
+      <div class="leaderboard-load-wrap">
+        <button class="leaderboard-load-btn" id="load-leaderboard-btn" onclick="enableLeaderboardPolling()">
+          👀 View Leaderboard
+        </button>
+      </div>
+
       <div class="leaderboard-title" id="leaderboard-title">
         🏆 Top Couch Tycoons (Live)
       </div>
       <div class="leaderboard-list" id="leaderboard-list"></div>
 
       <p style="margin-top: 15px; font-size: 0.85rem; color: var(--text-muted);" id="player-rank">
-        Connecting to live leaderboard...
+        Click "View Leaderboard" to load rankings.
       </p>
 
       <div class="social-share-bar" style="margin-top: 12px;">
@@ -1236,8 +1278,8 @@
       try {
         const { initializeApp } = await import("https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js");
         const {
-          getFirestore, doc, setDoc, collection, query, orderBy, limit,
-          onSnapshot, serverTimestamp, runTransaction, where, Timestamp
+          getFirestore, getDocs, deleteDoc, doc, setDoc, collection, query, orderBy, limit,
+          serverTimestamp, runTransaction, where, Timestamp
         } = await import("https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js");
 
         const firebaseConfig = {
@@ -1253,8 +1295,8 @@
         const db = getFirestore(app);
 
         window.__FIREBASE__ = {
-          db, doc, setDoc, collection, query, orderBy, limit,
-          onSnapshot, serverTimestamp, runTransaction, where, Timestamp
+          db, getDocs, deleteDoc, doc, setDoc, collection, query, orderBy, limit,
+          serverTimestamp, runTransaction, where, Timestamp
         };
 
         return true;
@@ -1269,15 +1311,96 @@
     // =========================
     // IDs / NAMES
     // =========================
-    function getPlayerId() {
-      let id = localStorage.getItem("cf_player_id");
-      if (!id) {
-        id = (window.crypto && typeof window.crypto.randomUUID === "function")
-          ? window.crypto.randomUUID()
-          : String(Date.now()) + "_" + Math.random().toString(16).slice(2);
-        localStorage.setItem("cf_player_id", id);
+    const DEVICE_LOCK_KEY = "cf_device_lock";
+    const DAILY_REWARD_KEY = "cf_last_reward";
+    const DAILY_LEADERBOARD_RESET_KEY = "cf_last_lb_reset";
+    const DAILY_TOP10_BONUS = 10;
+
+    function getLocalDateKey(date = new Date()) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, "0");
+      const d = String(date.getDate()).padStart(2, "0");
+      return `${y}-${m}-${d}`;
+    }
+
+    function normalizeStoredDateKey(rawValue) {
+      const raw = String(rawValue || "").trim();
+      if (!raw) return "";
+      if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw;
+
+      const parsed = new Date(raw);
+      if (Number.isNaN(parsed.getTime())) return "";
+      return getLocalDateKey(parsed);
+    }
+
+    function getDeviceFingerprint() {
+      try {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        let canvasSig = "";
+
+        if (ctx) {
+          ctx.textBaseline = "top";
+          ctx.font = "14px Arial";
+          ctx.fillStyle = "#f60";
+          ctx.fillRect(125, 1, 62, 20);
+          ctx.fillStyle = "#069";
+          ctx.fillText("couchfunds-fingerprint", 2, 15);
+          canvasSig = canvas.toDataURL().slice(0, 120);
+        }
+
+        const seed = [
+          navigator.userAgent || "",
+          navigator.language || "",
+          String(screen.colorDepth || ""),
+          `${screen.width || 0}x${screen.height || 0}`,
+          String(new Date().getTimezoneOffset()),
+          canvasSig
+        ].join("|");
+
+        let hash = 0;
+        for (let i = 0; i < seed.length; i++) {
+          const ch = seed.charCodeAt(i);
+          hash = ((hash << 5) - hash) + ch;
+          hash |= 0;
+        }
+        return `fp_${Math.abs(hash).toString(36)}`;
+      } catch {
+        return "fp_unknown";
       }
-      return id;
+    }
+
+    function getLockedUsername() {
+      const raw = localStorage.getItem(DEVICE_LOCK_KEY);
+      if (!raw) return "";
+
+      try {
+        const data = JSON.parse(raw);
+        if (!data || data.fingerprint !== getDeviceFingerprint()) return "";
+        const locked = sanitizeName(data.username || "", { allowFallback: false });
+        return isValidPublicUsername(locked) ? locked : "";
+      } catch {
+        return "";
+      }
+    }
+
+    function lockUsernameToDevice(username) {
+      const clean = sanitizeName(username, { allowFallback: false });
+      if (!isValidPublicUsername(clean)) return;
+      localStorage.setItem(DEVICE_LOCK_KEY, JSON.stringify({
+        fingerprint: getDeviceFingerprint(),
+        username: clean,
+        playerId: localStorage.getItem("cf_player_id") || "",
+        lockedAt: Date.now()
+      }));
+    }
+
+    function getPlayerId() {
+      const stableId = `cf_${getDeviceFingerprint()}`;
+      if (localStorage.getItem("cf_player_id") !== stableId) {
+        localStorage.setItem("cf_player_id", stableId);
+      }
+      return stableId;
     }
 
     function normalizeUsername(name) {
@@ -1288,7 +1411,7 @@
         .toLowerCase();
     }
 
-    function sanitizeName(name) {
+    function sanitizeName(name, { allowFallback = true } = {}) {
       let s = (name || "")
         .normalize("NFKC")
         .replace(/[<>`"'\\]/g, "")
@@ -1297,15 +1420,14 @@
         .trim()
         .slice(0, 16);
 
-      return s || "Anonymous";
+      return s || (allowFallback ? "Anonymous" : "");
     }
 
     function isInappropriate(name) {
       const n = normalizeUsername(name);
 
-      // allow fallback
-      if (!n) return false;
-      if (n === "anonymous") return false;
+      if (!n) return true;
+      if (n === "anonymous") return true;
 
       // only block truly bad patterns (don't block short names anymore)
       const banned = ["nazi","hitler","kkk","rape","rapist","pedo","pedophile","porn","sex","cunt","nigger","faggot","bitch","whore"];
@@ -1317,11 +1439,17 @@
       return false;
     }
 
+    function isValidPublicUsername(name) {
+      const clean = sanitizeName(name, { allowFallback: false });
+      return !!clean && clean.length >= 3 && normalizeUsername(clean) !== "anonymous" && !isInappropriate(clean);
+    }
+
     function getFirestoreErrorCode(err) {
       const direct = String(err?.code || "").toLowerCase();
       if (direct) return direct.includes("/") ? direct.split("/").pop() : direct;
 
       const msg = String(err?.message || "").toLowerCase();
+      if (msg.includes("resource-exhausted") || msg.includes("quota exceeded")) return "resource-exhausted";
       if (msg.includes("permission-denied") || msg.includes("missing or insufficient permissions")) return "permission-denied";
       if (msg.includes("failed-precondition")) return "failed-precondition";
       if (msg.includes("deadline-exceeded")) return "deadline-exceeded";
@@ -1331,29 +1459,35 @@
     }
 
     async function pickUsernameFlow(currentName = "") {
-      const raw = prompt("Choose a leaderboard name (3-16 chars):", currentName);
-      if (raw === null) return null;
+      while (true) {
+        const raw = prompt("Choose a leaderboard name (3-16 chars):", currentName);
+        if (raw === null || !(raw || "").trim()) {
+          alert("You must enter a username to continue.");
+          continue;
+        }
 
-      if (!(raw || "").trim()) return null;
+        const clean = sanitizeName(raw, { allowFallback: false });
+        if (!isValidPublicUsername(clean)) {
+          alert("That name isn't allowed. Please choose a real username.");
+          continue;
+        }
 
-      const clean = sanitizeName(raw);
-      if (clean === "Anonymous" || isInappropriate(clean)) {
-        alert("That name isn't allowed.");
-        return null;
+        return clean;
       }
-      return clean;
     }
 
     // =========================
     // DUPLICATE NAME PREVENTION (Firestore usernames collection)
     // =========================
     async function claimUsernameOrThrow(chosenName) {
-      const clean = sanitizeName(chosenName);
+      const clean = sanitizeName(chosenName, { allowFallback: false });
       const key = normalizeUsername(clean).replace(/\s/g, "_");
 
-      if (isInappropriate(clean)) throw new Error("bad_name");
-      if (clean === "Anonymous") return "Anonymous";
+      if (!isValidPublicUsername(clean)) {
+        throw new Error("bad_name");
+      }
       if (!window.__FIREBASE__) throw new Error("no_firebase");
+      if (typeof isFirestoreDisabled === "function" && isFirestoreDisabled()) throw new Error("firestore_disabled");
 
       const { db, doc, runTransaction, serverTimestamp } = window.__FIREBASE__;
       const nameDocRef = doc(db, "usernames", key);
@@ -1389,73 +1523,125 @@
       });
     }
 
+    async function syncDeviceLockOnServer(candidateName) {
+      const clean = sanitizeName(candidateName, { allowFallback: false });
+      if (!clean || !window.__FIREBASE__) return clean;
+      if (typeof isFirestoreDisabled === "function" && isFirestoreDisabled()) return clean;
+
+      const { db, doc, runTransaction, serverTimestamp } = window.__FIREBASE__;
+      const fingerprint = getDeviceFingerprint();
+      const lockRef = doc(db, "device_locks", fingerprint);
+      let lockedName = clean;
+
+      await runTransaction(db, async (tx) => {
+        const snap = await tx.get(lockRef);
+
+        if (snap.exists()) {
+          const data = snap.data() || {};
+          const existing = sanitizeName(data.username || "", { allowFallback: false });
+          if (isValidPublicUsername(existing)) {
+            lockedName = existing;
+          }
+          tx.set(lockRef, {
+            playerId: PLAYER_ID,
+            username: lockedName,
+            lastSeenAt: serverTimestamp()
+          }, { merge: true });
+          return;
+        }
+
+        tx.set(lockRef, {
+          fingerprint,
+          playerId: PLAYER_ID,
+          username: clean,
+          lockedAt: serverTimestamp(),
+          lastSeenAt: serverTimestamp()
+        });
+        lockedName = clean;
+      });
+
+      return lockedName;
+    }
+
     async function initUsername() {
+      const lockedLocal = getLockedUsername();
       const rawSaved = localStorage.getItem("cf_username");
       const saved = (rawSaved && rawSaved !== "null" && rawSaved !== "undefined")
         ? rawSaved
         : "";
 
-      let stored = saved ? sanitizeName(saved) : "";
-      if (!saved) {
-        const picked = await pickUsernameFlow("");
-        stored = picked ? sanitizeName(picked) : "Anonymous";
-      }
-      if (!stored || isInappropriate(stored)) stored = "Anonymous";
+      let stored = lockedLocal || (saved ? sanitizeName(saved, { allowFallback: false }) : "");
 
-      USERNAME = stored;
-      localStorage.setItem("cf_username", USERNAME);
-
-      if (!window.__FIREBASE__ || USERNAME === "Anonymous") {
-        return USERNAME;
+      if (!isValidPublicUsername(stored)) {
+        stored = await pickUsernameFlow("");
       }
 
-      try {
-        const claimed = await claimUsernameOrThrow(USERNAME);
-        USERNAME = claimed;
-        localStorage.setItem("cf_username", USERNAME);
-      } catch (e) {
-        const code = getFirestoreErrorCode(e);
-        if (e?.message === "name_taken" || e?.message === "bad_name") {
-          USERNAME = "Anonymous";
-          localStorage.setItem("cf_username", USERNAME);
-        } else {
-          // Keep local username when remote validation is temporarily unavailable.
-          if (code && code !== "permission-denied" && code !== "deadline-exceeded" && code !== "unavailable" && code !== "network") {
-            console.warn("Username init warning:", e);
+      if (window.__FIREBASE__ && !(typeof isFirestoreDisabled === "function" && isFirestoreDisabled())) {
+        try {
+          const serverLocked = await syncDeviceLockOnServer(stored);
+          if (serverLocked && normalizeUsername(serverLocked) !== normalizeUsername(stored)) {
+            stored = serverLocked;
           }
+        } catch (err) {
+          if (typeof handleFirestoreError === "function") handleFirestoreError(err, "device_lock");
+          console.warn("Device lock sync skipped:", err);
         }
       }
 
+      if (!isValidPublicUsername(stored)) {
+        stored = await pickUsernameFlow("");
+      }
+
+      USERNAME = stored;
+      localStorage.setItem("cf_username", USERNAME);
+      lockUsernameToDevice(USERNAME);
       return USERNAME;
     }
 
     const PLAYER_ID = getPlayerId();
     const storedUsername = localStorage.getItem("cf_username");
     let USERNAME = (storedUsername && storedUsername !== "null" && storedUsername !== "undefined")
-      ? sanitizeName(storedUsername)
-      : "Anonymous";
+      ? sanitizeName(storedUsername, { allowFallback: false })
+      : "";
+    if (!isValidPublicUsername(USERNAME)) USERNAME = "";
 
     // Rename with uniqueness
     window.renameCouchFundsUser = async () => {
-      const nextName = await pickUsernameFlow(USERNAME === "Anonymous" ? "" : USERNAME);
+      const localLock = getLockedUsername();
+      const nextName = await pickUsernameFlow(USERNAME || "");
       if (!nextName) return;
+
+      if (localLock && normalizeUsername(nextName) !== normalizeUsername(localLock)) {
+        alert(`This device is locked to "${localLock}".`);
+        return;
+      }
 
       // If firebase not ready yet, just set locally and claim later.
       if (!window.__FIREBASE__) {
-        USERNAME = sanitizeName(nextName);
+        USERNAME = sanitizeName(nextName, { allowFallback: false });
         localStorage.setItem("cf_username", USERNAME);
+        lockUsernameToDevice(USERNAME);
         markLeaderboardDirty();
         alert("Saved locally. We'll validate uniqueness when leaderboard connects.");
         return;
       }
 
+      if (typeof isFirestoreDisabled === "function" && isFirestoreDisabled()) {
+        USERNAME = sanitizeName(nextName, { allowFallback: false });
+        localStorage.setItem("cf_username", USERNAME);
+        lockUsernameToDevice(USERNAME);
+        markLeaderboardDirty();
+        alert("Saved locally, but leaderboard is paused (quota exceeded).");
+        return;
+      }
+
       try {
         const claimed = await claimUsernameOrThrow(nextName);
-        USERNAME = claimed;
+        const serverLocked = await syncDeviceLockOnServer(claimed).catch(() => claimed);
+        USERNAME = serverLocked || claimed;
         localStorage.setItem("cf_username", USERNAME);
+        lockUsernameToDevice(USERNAME);
         markLeaderboardDirty();
-
-        await syncScoreToFirestore(true);
       } catch (e) {
         const code = getFirestoreErrorCode(e);
         if (e?.message === "name_taken") {
@@ -1466,9 +1652,19 @@
           alert("That name isn't allowed.");
           return;
         }
-        if (code === "permission-denied" || code === "deadline-exceeded" || code === "unavailable" || code === "network") {
-          USERNAME = sanitizeName(nextName);
+        if (code === "resource-exhausted") {
+          if (typeof handleFirestoreError === "function") handleFirestoreError(e, "username_claim");
+          USERNAME = sanitizeName(nextName, { allowFallback: false });
           localStorage.setItem("cf_username", USERNAME);
+          lockUsernameToDevice(USERNAME);
+          markLeaderboardDirty();
+          alert("Saved locally, but could not verify uniqueness (quota exceeded).");
+          return;
+        }
+        if (code === "permission-denied" || code === "deadline-exceeded" || code === "unavailable" || code === "network") {
+          USERNAME = sanitizeName(nextName, { allowFallback: false });
+          localStorage.setItem("cf_username", USERNAME);
+          lockUsernameToDevice(USERNAME);
           markLeaderboardDirty();
           alert("Saved locally, but could not verify uniqueness right now.");
           return;
@@ -1572,13 +1768,13 @@
     // STREAK
     // =========================
     function updateStreak() {
-      const today = new Date().toDateString();
-      const lastVisit = gameState.lastVisitDate;
+      const today = getLocalDateKey();
+      const lastVisit = normalizeStoredDateKey(gameState.lastVisitDate);
 
       if (lastVisit !== today) {
         const yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
-        const yesterdayStr = yesterday.toDateString();
+        const yesterdayStr = getLocalDateKey(yesterday);
 
         if (lastVisit === yesterdayStr) {
           gameState.streak += 1;
@@ -1611,13 +1807,17 @@
     }
 
     function checkDailyReward() {
-      const today = new Date().toDateString();
-      const lastReward = localStorage.getItem('cf_last_reward');
+      const today = getLocalDateKey();
+      const lastRewardRaw = localStorage.getItem(DAILY_REWARD_KEY);
+      const lastReward = normalizeStoredDateKey(lastRewardRaw);
+      if (lastReward && lastRewardRaw !== lastReward) {
+        localStorage.setItem(DAILY_REWARD_KEY, lastReward);
+      }
       if (lastReward === today) return;
 
       const reward = 1000 * Math.max(1, gameState.streak || 1);
       gameState.balance += reward;
-      localStorage.setItem('cf_last_reward', today);
+      localStorage.setItem(DAILY_REWARD_KEY, today);
 
       const modal = document.createElement('div');
       modal.className = 'modal-overlay';
@@ -1643,17 +1843,199 @@
     let lastSyncedBalance = 0;
     let lastDirtyBalance = 0;
     let currentLeaderboardMode = 'alltime';
+    let leaderboardActivated = false;
+    let leaderboardPublishTimer = null;
     let leaderboardSyncInterval = null;
+    let leaderboardPollInterval = null;
+    let leaderboardPollInFlight = false;
     let saveLoopInterval = null;
-    const LEADERBOARD_SYNC_INTERVAL_MS = 5000;
-    const LEADERBOARD_MIN_SYNC_MS = 5000;
-    const MAX_SYNC_STALENESS_MS = 300000;
-    const BALANCE_SYNC_THRESHOLD = 100;
+    const LEADERBOARD_DEBOUNCE_MS = 20000;
+    const LEADERBOARD_MIN_SYNC_MS = 20000;
+    const LEADERBOARD_POLL_INTERVAL_MS = 60000;
+    const LEADERBOARD_PUBLISH_MILESTONES = [10000, 100000, 500000, 1000000];
     const MAX_LEADERBOARD_BALANCE = 10000000;
+    let lastPublishedMilestone = 0;
+
+    const FIRESTORE_DISABLED_UNTIL_KEY = "cf_fs_disabled_until";
+    const FIRESTORE_BACKOFF_MS = 15 * 60 * 1000;
+    let firestoreDisabledUntil = Number(localStorage.getItem(FIRESTORE_DISABLED_UNTIL_KEY) || "0") || 0;
+
+    function isFirestoreDisabled() {
+      return Date.now() < firestoreDisabledUntil;
+    }
+
+    function setLeaderboardStatus(text) {
+      const el = document.getElementById("player-rank");
+      if (el) el.textContent = text;
+    }
+
+    function setLeaderboardLoadButtonState() {
+      const btn = document.getElementById("load-leaderboard-btn");
+      if (!btn) return;
+
+      if (isFirestoreDisabled()) {
+        btn.textContent = "Leaderboard Paused";
+        btn.disabled = true;
+        return;
+      }
+
+      btn.disabled = false;
+      btn.textContent = leaderboardActivated ? "🔄 Refresh Leaderboard" : "👀 View Leaderboard";
+    }
+
+    function disableFirestoreFor(ms, reason = "") {
+      firestoreDisabledUntil = Date.now() + Math.max(0, ms || 0);
+      localStorage.setItem(FIRESTORE_DISABLED_UNTIL_KEY, String(firestoreDisabledUntil));
+      setLeaderboardStatus("Leaderboard paused (quota exceeded). Try again later.");
+      if (reason) console.warn("Firestore disabled:", reason);
+      if (leaderboardPublishTimer) {
+        clearTimeout(leaderboardPublishTimer);
+        leaderboardPublishTimer = null;
+      }
+      if (leaderboardSyncInterval) {
+        clearInterval(leaderboardSyncInterval);
+        leaderboardSyncInterval = null;
+      }
+      try { stopLeaderboardPolling(); } catch {}
+      setLeaderboardLoadButtonState();
+    }
+
+    function handleFirestoreError(err, context = "") {
+      const code = getFirestoreErrorCode(err);
+      if (code === "resource-exhausted") {
+        disableFirestoreFor(FIRESTORE_BACKOFF_MS, context || "resource-exhausted");
+      }
+    }
 
     function markLeaderboardDirty() {
       leaderboardDirty = true;
     }
+
+    function queueLeaderboardPublish(_reason = "") {
+      if (isResetting) return;
+      markLeaderboardDirty();
+      if (isFirestoreDisabled()) return;
+      if (!window.__FIREBASE__) return;
+
+      if (leaderboardPublishTimer) {
+        clearTimeout(leaderboardPublishTimer);
+      }
+      leaderboardPublishTimer = setTimeout(() => {
+        leaderboardPublishTimer = null;
+        syncScoreToFirestore(false).catch(() => {});
+      }, LEADERBOARD_DEBOUNCE_MS);
+    }
+
+    async function checkDailyLeaderboardReset() {
+      if (!window.__FIREBASE__) return;
+      if (isResetting) return;
+      if (isFirestoreDisabled()) return;
+
+      const today = getLocalDateKey();
+      const resetRaw = localStorage.getItem(DAILY_LEADERBOARD_RESET_KEY);
+      const lastLocalReset = normalizeStoredDateKey(resetRaw);
+      if (lastLocalReset && resetRaw !== lastLocalReset) {
+        localStorage.setItem(DAILY_LEADERBOARD_RESET_KEY, lastLocalReset);
+      }
+      if (lastLocalReset === today) return;
+
+      const y = new Date();
+      y.setDate(y.getDate() - 1);
+      const yesterday = getLocalDateKey(y);
+
+      const { db, collection, query, where, orderBy, limit, getDocs, doc, runTransaction, serverTimestamp } = window.__FIREBASE__;
+      const topPlayers = [];
+
+      try {
+        try {
+          const q = query(
+            collection(db, "leaderboard"),
+            where("dailyDate", "==", yesterday),
+            orderBy("dailyBalance", "desc"),
+            limit(10)
+          );
+          const snap = await getDocs(q);
+          snap.forEach(d => topPlayers.push({ id: d.id }));
+        } catch (e) {
+          const code = getFirestoreErrorCode(e);
+          if (code !== "failed-precondition") throw e;
+
+          const q = query(
+            collection(db, "leaderboard"),
+            where("dailyDate", "==", yesterday),
+            limit(40)
+          );
+          const snap = await getDocs(q);
+          const fallbackPlayers = [];
+          snap.forEach(d => fallbackPlayers.push({ id: d.id, ...d.data() }));
+          fallbackPlayers
+            .sort((a, b) => Number(b.dailyBalance || 0) - Number(a.dailyBalance || 0))
+            .slice(0, 10)
+            .forEach(p => topPlayers.push({ id: p.id }));
+        }
+
+        await Promise.all(topPlayers.map(async (p, index) => {
+          const playerRef = doc(db, "leaderboard", p.id);
+          await runTransaction(db, async (tx) => {
+            const snap = await tx.get(playerRef);
+            if (!snap.exists()) return;
+
+            const data = snap.data() || {};
+            const alreadyAwarded = normalizeStoredDateKey(data.dailyBonusDate) === today;
+            if (alreadyAwarded) return;
+
+            const pendingBonus = Math.max(0, Number(data.pendingBonus || 0));
+            tx.set(playerRef, {
+              pendingBonus: pendingBonus + DAILY_TOP10_BONUS,
+              dailyBonusDate: today,
+              dailyBalance: DAILY_TOP10_BONUS,
+              dailyDate: today,
+              lastDayRank: index + 1,
+              updatedAt: serverTimestamp()
+            }, { merge: true });
+          });
+        }));
+
+        localStorage.setItem(DAILY_LEADERBOARD_RESET_KEY, today);
+      } catch (err) {
+        handleFirestoreError(err, "daily_leaderboard_reset");
+        console.error("Daily leaderboard reset error:", err);
+      }
+    }
+
+    // One-time maintenance helper. Run from console: cleanupDuplicateAnonymous()
+    async function cleanupDuplicateAnonymous() {
+      if (!window.__FIREBASE__) {
+        alert("Firebase not ready.");
+        return;
+      }
+
+      const { db, collection, query, where, getDocs, deleteDoc, doc } = window.__FIREBASE__;
+      try {
+        const q = query(collection(db, "leaderboard"), where("name", "==", "Anonymous"));
+        const snap = await getDocs(q);
+        if (!snap.size) {
+          alert("No Anonymous entries found.");
+          return;
+        }
+
+        const ok = confirm(`Delete ${snap.size} Anonymous leaderboard entries? This cannot be undone.`);
+        if (!ok) return;
+
+        const deletes = [];
+        snap.forEach((d) => {
+          deletes.push(deleteDoc(doc(db, "leaderboard", d.id)));
+        });
+        await Promise.all(deletes);
+
+        alert(`Deleted ${snap.size} Anonymous entries.`);
+        location.reload();
+      } catch (err) {
+        console.error("Cleanup error:", err);
+        alert(`Cleanup failed: ${err?.message || err}`);
+      }
+    }
+    window.cleanupDuplicateAnonymous = cleanupDuplicateAnonymous;
 
     function switchLeaderboard(mode) {
       if (mode === currentLeaderboardMode) return;
@@ -1671,91 +2053,190 @@
         trackEvent('Leaderboard', 'switch_tab', mode);
       }
 
-      startLiveLeaderboard();
+      if (leaderboardActivated) {
+        startLiveLeaderboard();
+      } else {
+        setLeaderboardStatus('Click "View Leaderboard" to load rankings.');
+      }
     }
     window.switchLeaderboard = switchLeaderboard;
 
+    function enableLeaderboardPolling() {
+      leaderboardActivated = true;
+      setLeaderboardLoadButtonState();
+      startLiveLeaderboard();
+    }
+    window.enableLeaderboardPolling = enableLeaderboardPolling;
+
     async function syncScoreToFirestore(force = false) {
       if (!window.__FIREBASE__) return;
+      if (isResetting) return;
+      if (isFirestoreDisabled()) return;
+      const publicName = sanitizeName(USERNAME, { allowFallback: false });
+      if (!isValidPublicUsername(publicName)) return;
 
       const now = Date.now();
-      const balanceInt = Math.max(0, Math.floor(gameState.balance));
-      const balanceChangedEnough = Math.abs(balanceInt - lastSyncedBalance) >= BALANCE_SYNC_THRESHOLD;
-      const staleSync = (now - lastLeaderboardSyncMs) > MAX_SYNC_STALENESS_MS;
-      const shouldSync = force || leaderboardDirty || balanceChangedEnough || staleSync;
-
-      if (!shouldSync) return;
+      if (!force && !leaderboardDirty) return;
       if (!force && (now - lastLeaderboardSyncMs < LEADERBOARD_MIN_SYNC_MS)) return;
+      const balanceInt = Math.max(0, Math.floor(gameState.balance));
 
-      const { db, doc, setDoc, serverTimestamp } = window.__FIREBASE__;
+      const { db, doc, runTransaction, serverTimestamp } = window.__FIREBASE__;
 
       try {
-        const today = new Date().toDateString();
+        const today = getLocalDateKey();
         const sessionSeconds = Math.max(1, Math.floor((now - (gameState.firstPlayTime || now)) / 1000));
         const rateCapByPlaytime = Math.floor(sessionSeconds * Math.max(1, gameState.income + gameState.clickValue * 2));
-        const safeBalance = Math.min(balanceInt, MAX_LEADERBOARD_BALANCE, rateCapByPlaytime + 25000);
+        let claimedBonus = 0;
+        let syncedBalance = balanceInt;
 
-        await setDoc(
-          doc(db, "leaderboard", PLAYER_ID),
-          {
-            playerId: PLAYER_ID,
-            name: sanitizeName(USERNAME),
-            balance: safeBalance,
-            updatedAt: serverTimestamp(),
-            dailyBalance: safeBalance,
-            dailyDate: today,
-            referralCode: getReferralCode(),
-            referredBy: getReferredBy() || null,
-            playTime: sessionSeconds
-          },
-          { merge: true }
-        );
+        await runTransaction(db, async (tx) => {
+          const playerRef = doc(db, "leaderboard", PLAYER_ID);
+          const snap = await tx.get(playerRef);
+          const prev = snap.exists() ? (snap.data() || {}) : {};
+
+          const prevBalance = Math.max(0, Number(prev.balance || 0));
+          const prevDailyBalance = Math.max(0, Number(prev.dailyBalance || 0));
+          const prevDailyDate = normalizeStoredDateKey(prev.dailyDate);
+          const pendingBonus = Math.max(0, Number(prev.pendingBonus || 0));
+          claimedBonus = pendingBonus;
+
+          const effectiveBalance = Math.max(0, balanceInt + pendingBonus);
+          const safeBalance = Math.min(effectiveBalance, MAX_LEADERBOARD_BALANCE, rateCapByPlaytime + 25000);
+          syncedBalance = safeBalance;
+
+          const gainSinceLastSync = Math.max(0, safeBalance - prevBalance);
+          let nextDailyBalance = prevDailyDate === today
+            ? (prevDailyBalance + gainSinceLastSync)
+            : gainSinceLastSync;
+
+          if (prevDailyDate === today && prevDailyBalance > nextDailyBalance) {
+            nextDailyBalance = prevDailyBalance;
+          }
+
+          tx.set(
+            playerRef,
+            {
+              playerId: PLAYER_ID,
+              name: publicName,
+              balance: safeBalance,
+              updatedAt: serverTimestamp(),
+              dailyBalance: nextDailyBalance,
+              dailyDate: today,
+              pendingBonus: 0,
+              referralCode: getReferralCode(),
+              referredBy: getReferredBy() || null,
+              playTime: sessionSeconds
+            },
+            { merge: true }
+          );
+        });
+
+        if (claimedBonus > 0) {
+          gameState.balance += claimedBonus;
+          saveGame(true);
+          updateUI();
+        }
 
         lastLeaderboardSyncMs = Date.now();
-        lastSyncedBalance = safeBalance;
+        lastSyncedBalance = syncedBalance;
         lastDirtyBalance = Math.max(0, Math.floor(gameState.balance));
         leaderboardDirty = false;
       } catch (err) {
+        handleFirestoreError(err, "sync_score");
         console.error("Firestore sync error:", err);
+      }
+    }
+
+    function stopLeaderboardPolling() {
+      if (leaderboardPollInterval) {
+        clearInterval(leaderboardPollInterval);
+        leaderboardPollInterval = null;
+      }
+      // Back-compat: if an older build left a listener around, make sure it's off.
+      if (leaderboardUnsubscribe) {
+        try { leaderboardUnsubscribe(); } catch {}
+        leaderboardUnsubscribe = null;
+      }
+    }
+
+    async function fetchLeaderboardOnce() {
+      if (!window.__FIREBASE__) return;
+      if (isResetting) return;
+      if (isFirestoreDisabled()) return;
+      if (leaderboardPollInFlight) return;
+      leaderboardPollInFlight = true;
+
+      const { db, collection, query, orderBy, limit, where, getDocs } = window.__FIREBASE__;
+      const today = getLocalDateKey();
+
+      try {
+        const players = [];
+
+        if (currentLeaderboardMode === 'daily') {
+          // Prefer an indexed query (where + orderBy). If the index doesn't exist, fall back to a smaller sample.
+          try {
+            const q = query(
+              collection(db, "leaderboard"),
+              where("dailyDate", "==", today),
+              orderBy("dailyBalance", "desc"),
+              limit(10)
+            );
+            const snap = await getDocs(q);
+            snap.forEach(d => players.push({ id: d.id, ...d.data() }));
+            renderLeaderboard(players);
+            return;
+          } catch (e) {
+            const code = getFirestoreErrorCode(e);
+            if (code !== "failed-precondition") throw e;
+
+            const q = query(
+              collection(db, "leaderboard"),
+              where("dailyDate", "==", today),
+              limit(30)
+            );
+            const snap = await getDocs(q);
+            snap.forEach(d => players.push({ id: d.id, ...d.data() }));
+            players.sort((a, b) => Number(b.dailyBalance || 0) - Number(a.dailyBalance || 0));
+            renderLeaderboard(players.slice(0, 10));
+            return;
+          }
+        }
+
+        const q = query(
+          collection(db, "leaderboard"),
+          orderBy("balance", "desc"),
+          limit(10)
+        );
+        const snap = await getDocs(q);
+        snap.forEach(d => players.push({ id: d.id, ...d.data() }));
+        renderLeaderboard(players);
+      } catch (err) {
+        handleFirestoreError(err, "leaderboard_fetch");
+        console.error("Leaderboard fetch error:", err);
+        if (!isFirestoreDisabled()) setLeaderboardStatus("Leaderboard offline (check connection/quota).");
+      } finally {
+        leaderboardPollInFlight = false;
       }
     }
 
     function startLiveLeaderboard() {
       if (!window.__FIREBASE__) return;
-
-      const { db, collection, query, orderBy, limit, onSnapshot, where } = window.__FIREBASE__;
-      if (leaderboardUnsubscribe) leaderboardUnsubscribe();
-
-      let q;
-      const today = new Date().toDateString();
-
-      if (currentLeaderboardMode === 'daily') {
-        q = query(
-          collection(db, "leaderboard"),
-          where("dailyDate", "==", today),
-          limit(100)
-        );
-      } else {
-        q = query(
-          collection(db, "leaderboard"),
-          orderBy("balance", "desc"),
-          limit(10)
-        );
+      if (!leaderboardActivated) {
+        setLeaderboardStatus('Click "View Leaderboard" to load rankings.');
+        setLeaderboardLoadButtonState();
+        return;
+      }
+      if (isFirestoreDisabled()) {
+        setLeaderboardStatus("Leaderboard paused (quota exceeded). Try again later.");
+        setLeaderboardLoadButtonState();
+        return;
       }
 
-      leaderboardUnsubscribe = onSnapshot(q, (snapshot) => {
-        const players = [];
-        snapshot.forEach(d => players.push({ id: d.id, ...d.data() }));
-        if (currentLeaderboardMode === 'daily') {
-          players.sort((a, b) => Number(b.dailyBalance || 0) - Number(a.dailyBalance || 0));
-          renderLeaderboard(players.slice(0, 10));
-          return;
-        }
-        renderLeaderboard(players);
-      }, (err) => {
-        console.error("Leaderboard listener error:", err);
-        document.getElementById("player-rank").textContent = "Leaderboard offline (check Firestore rules).";
-      });
+      stopLeaderboardPolling();
+      setLeaderboardStatus("Loading leaderboard...");
+      setLeaderboardLoadButtonState();
+      fetchLeaderboardOnce();
+      leaderboardPollInterval = setInterval(fetchLeaderboardOnce, LEADERBOARD_POLL_INTERVAL_MS);
     }
 
     function renderLeaderboard(players) {
@@ -2214,7 +2695,6 @@
         }
 
         checkAchievements();
-        markLeaderboardDirty();
         setTimeout(unlockSecretHustle, 800);
       }
       else if (win === "O") {
@@ -2302,6 +2782,7 @@
     let gameLoopInterval = null;
     const sessionStart = Date.now();
     let lastMilestone = 0;
+    let isResetting = false;
 
     let gameState = {
       balance: 0.00,
@@ -2447,6 +2928,8 @@
         try {
           const loadedState = JSON.parse(saved);
           Object.assign(gameState, loadedState);
+          // No offline catch-up: income only accrues while the page is actively open.
+          gameState.lastSaveTime = Date.now();
 
           if (loadedState.upgrades) {
             gameState.upgrades.forEach((u, i) => {
@@ -2467,6 +2950,7 @@
 
       if (!gameState.firstPlayTime) gameState.firstPlayTime = Date.now();
       if (typeof gameState.soundEnabled !== "boolean") gameState.soundEnabled = true;
+      gameState.lastVisitDate = normalizeStoredDateKey(gameState.lastVisitDate);
 
       const storedPrestigeLevel = parseInt(localStorage.getItem(PRESTIGE_LEVEL_KEY) || "0", 10);
       const storedPrestigeBonus = parseFloat(localStorage.getItem(PRESTIGE_BONUS_KEY) || "1");
@@ -2483,14 +2967,15 @@
       lastDirtyBalance = balanceInt;
       lastSyncedBalance = balanceInt;
       lastMilestone = [100, 1000, 10000, 100000, 500000, 1000000].filter(m => balanceInt >= m).pop() || 0;
+      lastPublishedMilestone = LEADERBOARD_PUBLISH_MILESTONES.filter(m => balanceInt >= m).pop() || 0;
 
       recalcIncome();
       updateStreak();
       renderAchievements();
-      markLeaderboardDirty();
     }
 
     function saveGame(force = false) {
+      if (isResetting) return;
       if (!force && !gameLoopInterval) return;
       gameState.lastSaveTime = Date.now();
       try {
@@ -2501,34 +2986,40 @@
     }
 
     function hardReset() {
-      if (confirm("⚠️ RESET WARNING ⚠️\n\nAre you sure you want to delete your save file and start over? This cannot be undone.")) {
-        if (gameLoopInterval) {
-          clearInterval(gameLoopInterval);
-          gameLoopInterval = null;
-        }
-        if (saveLoopInterval) {
-          clearInterval(saveLoopInterval);
-          saveLoopInterval = null;
-        }
-        if (leaderboardSyncInterval) {
-          clearInterval(leaderboardSyncInterval);
-          leaderboardSyncInterval = null;
-        }
-        if (leaderboardUnsubscribe) {
-          leaderboardUnsubscribe();
-          leaderboardUnsubscribe = null;
-        }
-        // Keep username + player id, only reset game stats
-        localStorage.removeItem(SAVE_KEY);
-        LEGACY_SAVE_KEYS.forEach(k => localStorage.removeItem(k));
-        localStorage.removeItem('cf_referral_code');
-        localStorage.removeItem('cf_referred_by');
-        localStorage.removeItem('cf_my_referrals');
-        localStorage.removeItem('cf_last_reward');
-        localStorage.removeItem(PRESTIGE_LEVEL_KEY);
-        localStorage.removeItem(PRESTIGE_BONUS_KEY);
-        location.reload();
+      if (!confirm("⚠️ RESET WARNING ⚠️\n\nAre you sure you want to delete your save file and start over? This cannot be undone.")) {
+        return;
       }
+
+      if (gameLoopInterval) {
+        clearInterval(gameLoopInterval);
+        gameLoopInterval = null;
+      }
+      if (saveLoopInterval) {
+        clearInterval(saveLoopInterval);
+        saveLoopInterval = null;
+      }
+      if (leaderboardSyncInterval) {
+        clearInterval(leaderboardSyncInterval);
+        leaderboardSyncInterval = null;
+      }
+      if (leaderboardPublishTimer) {
+        clearTimeout(leaderboardPublishTimer);
+        leaderboardPublishTimer = null;
+      }
+      stopLeaderboardPolling();
+
+      // Keep username/player identity lock, reset gameplay progress.
+      isResetting = true;
+      localStorage.removeItem(SAVE_KEY);
+      LEGACY_SAVE_KEYS.forEach(k => localStorage.removeItem(k));
+      localStorage.removeItem('cf_referral_code');
+      localStorage.removeItem('cf_referred_by');
+      localStorage.removeItem('cf_my_referrals');
+      localStorage.removeItem(DAILY_REWARD_KEY);
+      localStorage.removeItem(DAILY_LEADERBOARD_RESET_KEY);
+      localStorage.removeItem(PRESTIGE_LEVEL_KEY);
+      localStorage.removeItem(PRESTIGE_BONUS_KEY);
+      location.reload();
     }
 
     function prestigeReset() {
@@ -2542,6 +3033,7 @@
       gameState.prestigeBonus = 1 + (gameState.prestigeLevel * 0.1);
       localStorage.setItem(PRESTIGE_LEVEL_KEY, String(gameState.prestigeLevel));
       localStorage.setItem(PRESTIGE_BONUS_KEY, String(gameState.prestigeBonus));
+      isResetting = true;
 
       if (gameLoopInterval) {
         clearInterval(gameLoopInterval);
@@ -2554,6 +3046,10 @@
       if (leaderboardSyncInterval) {
         clearInterval(leaderboardSyncInterval);
         leaderboardSyncInterval = null;
+      }
+      if (leaderboardPublishTimer) {
+        clearTimeout(leaderboardPublishTimer);
+        leaderboardPublishTimer = null;
       }
       if (leaderboardUnsubscribe) {
         leaderboardUnsubscribe();
@@ -2639,15 +3135,15 @@
 
       checkAchievements();
       const balanceInt = Math.max(0, Math.floor(gameState.balance));
-      if (Math.abs(balanceInt - lastDirtyBalance) >= BALANCE_SYNC_THRESHOLD) {
-        lastDirtyBalance = balanceInt;
-        markLeaderboardDirty();
-      }
 
       const milestones = [100, 1000, 10000, 100000, 500000, 1000000];
       const reached = milestones.filter(m => balanceInt >= m).pop() || 0;
       if (reached > lastMilestone) {
         lastMilestone = reached;
+        if (LEADERBOARD_PUBLISH_MILESTONES.includes(reached) && reached > lastPublishedMilestone) {
+          lastPublishedMilestone = reached;
+          queueLeaderboardPublish("milestone");
+        }
         if (typeof trackEvent === 'function') {
           trackEvent('Progression', 'milestone', `$${reached}`);
         }
@@ -2674,7 +3170,7 @@
         if (typeof trackEvent === 'function') {
           trackEvent('Economy', 'buy_upgrade', `${u.name} x${bought}`);
         }
-        markLeaderboardDirty();
+        queueLeaderboardPublish("buy_upgrade");
         recalcIncome();
         updateUI();
         playSound('buy');
@@ -2698,7 +3194,7 @@
         if (typeof trackEvent === 'function') {
           trackEvent('Economy', 'buy_upgrade_max', `${u.name} x${bought}`);
         }
-        markLeaderboardDirty();
+        queueLeaderboardPublish("buy_upgrade_max");
         recalcIncome();
         updateUI();
         playSound('buy');
@@ -2739,7 +3235,6 @@
       gameState.hasWon = true;
       document.getElementById('win-modal').style.display = 'flex';
       checkAchievements();
-      markLeaderboardDirty();
       playSound('win');
 
       if (typeof trackEvent === 'function') {
@@ -2756,29 +3251,43 @@
     function bootFirebaseConnections() {
       const rankEl = document.getElementById("player-rank");
       if (rankEl) rankEl.textContent = "Connecting to leaderboard...";
+      setLeaderboardLoadButtonState();
 
       const initPromise = window.__firebaseInitPromise || Promise.resolve(false);
 
       initPromise.then(async (ok) => {
+        USERNAME = await initUsername();
+
         if (!ok || !window.__FIREBASE__) {
           if (rankEl) rankEl.textContent = "Leaderboard not connected (Firebase failed to load).";
+          const btn = document.getElementById("load-leaderboard-btn");
+          if (btn) {
+            btn.disabled = true;
+            btn.textContent = "Leaderboard Offline";
+          }
           return;
         }
 
-        // Connect leaderboard first for faster visible load.
-        startLiveLeaderboard();
-        await syncScoreToFirestore(true);
-
-        // Claim/validate username after leaderboard is already live.
-        USERNAME = await initUsername();
-        await syncScoreToFirestore(true);
-
-        if (!leaderboardSyncInterval) {
-          leaderboardSyncInterval = setInterval(() => syncScoreToFirestore(false), LEADERBOARD_SYNC_INTERVAL_MS);
+        if (typeof isFirestoreDisabled === "function" && isFirestoreDisabled()) {
+          if (rankEl) rankEl.textContent = "Leaderboard paused (quota exceeded). Try again later.";
+          setLeaderboardLoadButtonState();
+          return;
         }
-      }).catch((err) => {
+
+        await checkDailyLeaderboardReset();
+        setLeaderboardStatus('Click "View Leaderboard" to load rankings.');
+        setLeaderboardLoadButtonState();
+      }).catch(async (err) => {
+        if (!USERNAME) {
+          try { USERNAME = await initUsername(); } catch {}
+        }
         console.error("Firebase boot error:", err);
         if (rankEl) rankEl.textContent = "Leaderboard offline.";
+        const btn = document.getElementById("load-leaderboard-btn");
+        if (btn) {
+          btn.disabled = true;
+          btn.textContent = "Leaderboard Offline";
+        }
       });
     }
 
@@ -2822,17 +3331,23 @@
     });
 
     document.addEventListener('visibilitychange', () => {
+      if (isResetting) return;
       if (!document.hidden) return;
       saveGame(true);
-      syncScoreToFirestore(true).catch(() => {});
     });
 
     window.addEventListener('pagehide', () => {
+      if (isResetting) return;
       saveGame(true);
-      syncScoreToFirestore(true).catch(() => {});
+      if (leaderboardPublishTimer) {
+        clearTimeout(leaderboardPublishTimer);
+        leaderboardPublishTimer = null;
+      }
+      if (leaderboardDirty) syncScoreToFirestore(true).catch(() => {});
     });
 
     window.addEventListener('beforeunload', () => {
+      if (isResetting) return;
       saveGame(true);
 
       const sessionLength = Math.floor((Date.now() - sessionStart) / 1000);
@@ -2852,9 +3367,14 @@
         clearInterval(leaderboardSyncInterval);
         leaderboardSyncInterval = null;
       }
+      if (leaderboardPublishTimer) {
+        clearTimeout(leaderboardPublishTimer);
+        leaderboardPublishTimer = null;
+      }
+      stopLeaderboardPolling();
 
       try {
-        if (window.__FIREBASE__) syncScoreToFirestore(true);
+        if (window.__FIREBASE__ && leaderboardDirty) syncScoreToFirestore(true);
       } catch {}
     });
   </script>
