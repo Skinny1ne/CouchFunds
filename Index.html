@@ -1,109 +1,197 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Couch Funds | Build Wealth Without Leaving Your Couch 🛋️💰</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Beta Test App</title>
+    <style>
+        /* Global */
+        body, html { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; overflow: hidden; background-color: #fafafa; height: 100%; width: 100%; color: #333; }
+        .stage { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; position: absolute; top: 0; left: 0; }
+        .active { display: flex; }
 
-  <meta name="description" content="Build wealth without the hustle. Get daily money tips, play games, and unlock secret AI side hustles. The anti-grind finance community.">
-  <meta name="keywords" content="passive income, side hustles, AI money making, financial tips, wealth building, couch potato millionaire">
-  <meta name="author" content="Couch Funds">
+        /* Stage 1: Fake Beta Test */
+        #stage-beta { padding: 20px; text-align: center; }
+        .dev-box { border: 2px dashed #ccc; padding: 30px; border-radius: 10px; background: #fff; max-width: 90%; }
+        h1 { font-size: 24px; margin-bottom: 10px; }
+        p { font-size: 16px; color: #555; margin-bottom: 20px; }
+        .btn-test { background: #007aff; color: white; border: none; padding: 15px 30px; font-size: 18px; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
 
-  <meta property="og:title" content="Couch Funds | Build Wealth. Stay Horizontal.">
-  <meta property="og:description" content="I just unlocked secret side hustles on Couch Funds! 🛋️💰 Beat the AI and learn how to make money online.">
-  <meta property="og:image" content="https://placehold.co/1200x630/022c22/fbbf24/png?text=Couch+Funds&font=raleway">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:image:type" content="image/png">
-  <meta property="og:url" content="https://shungtai.com">
-  <meta property="og:type" content="website">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Couch Funds | Build Wealth. Stay Horizontal.">
-  <meta name="twitter:description" content="Beat the AI and unlock secret side hustles. The anti-grind finance community.">
-  <meta name="twitter:image" content="https://placehold.co/1200x630/022c22/fbbf24/png?text=Couch+Funds&font=raleway">
+        /* Stage 2: The Fake Terminal/Error */
+        #stage-error { background: #000; color: #0f0; font-family: monospace; align-items: flex-start; justify-content: flex-start; padding: 20px; box-sizing: border-box; }
+        #terminal-text { font-size: 14px; line-height: 1.5; white-space: pre-wrap; margin-bottom: 20px; }
+        .btn-danger { display: none; background: #ff3b30; color: white; border: none; padding: 15px 30px; font-size: 18px; font-weight: bold; border-radius: 5px; position: absolute; z-index: 10; touch-action: none; }
 
-  <link rel="canonical" href="https://shungtai.com">
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;800&family=Space+Grotesk:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+        /* Stage 3: Fake Notifications */
+        #stage-notif { background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 20; }
+        .notification { background: #fff; width: 90%; max-width: 350px; padding: 15px; border-radius: 15px; margin: 10px 0; box-shadow: 0 10px 20px rgba(0,0,0,0.2); transform: translateY(-50px); opacity: 0; transition: all 0.3s ease; display: flex; align-items: center; }
+        .notif-icon { width: 40px; height: 40px; background: #34c759; border-radius: 50%; margin-right: 15px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
+        .notif-content strong { display: block; font-size: 16px; }
+        .notif-content span { font-size: 14px; color: #666; }
 
-  <!-- Google Analytics (REPLACE G-XXXXXXXXXX with your Measurement ID) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-XXXXXXXXXX', { 'send_page_view': true });
+        /* Stage 4: Reveal */
+        #stage-reveal { background: #111; color: #fff; text-align: center; overflow: hidden; z-index: 30; }
+        .crazy-text { font-size: 15vw; font-weight: 900; animation: rainbow 0.5s infinite, shake 0.2s infinite; text-shadow: 0 0 20px rgba(255,255,255,0.8); margin: 0; line-height: 1; }
+        .by-skii { font-size: 6vw; margin-top: 20px; font-family: 'Courier New', Courier, monospace; font-weight: bold; animation: rainbow 2s infinite reverse; }
 
-    // Custom event tracking function
-    window.trackEvent = function(category, action, label) {
-      if (typeof gtag !== 'undefined') {
-        gtag('event', action, {
-          'event_category': category,
-          'event_label': label
+        /* Animations */
+        @keyframes rainbow { 0% { color: #f00; } 33% { color: #0f0; } 66% { color: #00f; } 100% { color: #f00; } }
+        @keyframes shake { 0% { transform: translate(2px, 1px) rotate(0deg); } 10% { transform: translate(-1px, -2px) rotate(-1deg); } 20% { transform: translate(-3px, 0px) rotate(1deg); } 30% { transform: translate(0px, 2px) rotate(0deg); } 40% { transform: translate(1px, -1px) rotate(1deg); } 50% { transform: translate(-1px, 2px) rotate(-1deg); } 60% { transform: translate(-3px, 1px) rotate(0deg); } 70% { transform: translate(2px, 1px) rotate(-1deg); } 80% { transform: translate(-1px, -1px) rotate(1deg); } 90% { transform: translate(2px, 2px) rotate(0deg); } 100% { transform: translate(1px, -2px) rotate(-1deg); } }
+    </style>
+</head>
+<body>
+
+    <div id="stage-beta" class="stage active">
+        <div class="dev-box">
+            <h1>App UI Test v0.4</h1>
+            <p>Hey! Thanks for helping me test this out. I just need to check if the button latency works on mobile devices.</p>
+            <p style="font-size: 12px; color: #999;">Just tap it once and wait for the ping.</p>
+            <button class="btn-test" onclick="startPrank()">Run Latency Test</button>
+        </div>
+    </div>
+
+    <div id="stage-error" class="stage">
+        <div id="terminal-text"></div>
+        <button id="btn-cancel" class="btn-danger">CANCEL UPLOAD</button>
+    </div>
+
+    <div id="stage-notif" class="stage">
+        </div>
+
+    <div id="stage-reveal" class="stage">
+        <h1 class="crazy-text">APRIL FOOL'S!</h1>
+        <p class="by-skii">by Skii</p>
+    </div>
+
+    <script>
+        const sBeta = document.getElementById('stage-beta');
+        const sError = document.getElementById('stage-error');
+        const sNotif = document.getElementById('stage-notif');
+        const sReveal = document.getElementById('stage-reveal');
+        const termText = document.getElementById('terminal-text');
+        const btnCancel = document.getElementById('btn-cancel');
+
+        let evades = 0;
+        const maxEvades = 6;
+
+        const terminalLines = [
+            "Initializing connection...",
+            "Ping: 24ms",
+            "CRITICAL ERROR: Memory leak detected.",
+            "Bypassing security protocols...",
+            "Accessing Photo Library...",
+            "Compiling images... 423 files found.",
+            "WARNING: Uploading local files to public server...",
+            "Uploading: 14%...",
+            "Uploading: 48%...",
+            "Uploading: 89%...",
+            "ACTION REQUIRED: Tap CANCEL to abort!"
+        ];
+
+        function startPrank() {
+            sBeta.classList.remove('active');
+            sError.classList.add('active');
+            runTerminal();
+        }
+
+        function runTerminal() {
+            let i = 0;
+            function typeLine() {
+                if (i < terminalLines.length) {
+                    termText.innerHTML += terminalLines[i] + "<br>";
+                    // Make it type faster as it gets scarier
+                    let delay = i > 5 ? 400 : 800;
+                    if (i === terminalLines.length - 1) {
+                        termText.style.color = "red";
+                        setTimeout(() => {
+                            btnCancel.style.display = "block";
+                            btnCancel.style.top = "50%";
+                            btnCancel.style.left = "50%";
+                            btnCancel.style.transform = "translate(-50%, -50%)";
+                        }, 500);
+                    }
+                    i++;
+                    setTimeout(typeLine, delay);
+                }
+            }
+            typeLine();
+        }
+
+        // The Game: Catch the cancel button
+        function moveButton(e) {
+            if (evades < maxEvades) {
+                e.preventDefault();
+                btnCancel.style.transform = "none";
+                
+                const maxX = window.innerWidth - btnCancel.offsetWidth - 20;
+                const maxY = window.innerHeight - btnCancel.offsetHeight - 20;
+                
+                const randomX = Math.max(10, Math.floor(Math.random() * maxX));
+                const randomY = Math.max(10, Math.floor(Math.random() * maxY));
+                
+                btnCancel.style.left = randomX + 'px';
+                btnCancel.style.top = randomY + 'px';
+                
+                evades++;
+                if (evades === maxEvades) {
+                    btnCancel.innerText = "OK, CANCEL NOW";
+                    btnCancel.style.background = "#34c759";
+                }
+            }
+        }
+
+        btnCancel.addEventListener('touchstart', moveButton, {passive: false});
+        btnCancel.addEventListener('mouseover', moveButton);
+
+        btnCancel.addEventListener('click', showNotifications);
+        btnCancel.addEventListener('touchend', (e) => {
+            if (evades >= maxEvades) showNotifications();
         });
-      }
-    };
-  </script>
 
-  <style>
-    :root {
-      --bg-deep: #022c22;
-      --bg-glass: rgba(255, 255, 255, 0.03);
-      --bg-glass-hover: rgba(255, 255, 255, 0.08);
-      --border-glass: rgba(255, 255, 255, 0.1);
-      --accent-gold: #fbbf24;
-      --accent-green: #34d399;
-      --accent-red: #f87171;
-      --accent-purple: #a78bfa;
-      --text-main: #ecfdf5;
-      --text-muted: #6ee7b7;
-      --fb-blue: #4267B2;
-    }
+        function showNotifications() {
+            sError.classList.remove('active');
+            sNotif.classList.add('active');
 
-    * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-user-select: none; }
+            const messages = [
+                { sender: "System", text: "Upload complete. Link copied to clipboard." },
+                { sender: "Mom", text: "Why did you just post all those pictures?!" },
+                { sender: "Bank", text: "Alert: $499.99 charged for 'Premium Server Space'." }
+            ];
 
-    body {
-      background-color: var(--bg-deep);
-      color: var(--text-main);
-      font-family: 'Space Grotesk', sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      overflow-x: hidden;
-      position: relative;
-      padding-bottom: 80px;
-    }
+            messages.forEach((msg, index) => {
+                setTimeout(() => {
+                    const notif = document.createElement('div');
+                    notif.className = 'notification';
+                    notif.innerHTML = `
+                        <div class="notif-icon">${msg.sender.charAt(0)}</div>
+                        <div class="notif-content">
+                            <strong>${msg.sender}</strong>
+                            <span>${msg.text}</span>
+                        </div>
+                    `;
+                    sNotif.appendChild(notif);
+                    
+                    setTimeout(() => {
+                        notif.style.opacity = '1';
+                        notif.style.transform = 'translateY(0)';
+                    }, 50);
 
-    #loading-screen {
-      position: fixed;
-      inset: 0;
-      background: var(--bg-deep);
-      z-index: 9999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 12px;
-      transition: opacity 0.5s ease;
-    }
+                    // If it's the last notification, wait a bit then show the final reveal
+                    if (index === messages.length - 1) {
+                        setTimeout(showReveal, 3500);
+                    }
+                }, index * 1500);
+            });
+        }
 
-    #loading-screen .icon { font-size: 3.2rem; }
-    #loading-screen .title {
-      color: var(--accent-gold);
-      font-family: 'Outfit', sans-serif;
-      font-size: 2rem;
-      font-weight: 900;
-      letter-spacing: 1px;
-    }
-    #loading-screen .sub {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-    }
-
-    .orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(80px);
+        function showReveal() {
+            sNotif.classList.remove('active');
+            sReveal.classList.add('active');
+            document.body.style.backgroundColor = "#111";
+        }
+    </script>
+</body>
+</html>
       z-index: -1;
       opacity: 0.4;
       animation: float 20s infinite alternate;
